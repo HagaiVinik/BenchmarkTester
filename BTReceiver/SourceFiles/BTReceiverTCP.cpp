@@ -61,12 +61,10 @@ void BTReceiverTCP::listenForConnection(const int &maxConnectionRequests)
 int BTReceiverTCP::receiveNumOfPackets()
 {
     const int flag = 0;
-    int successVal = 0;
+    int successVal = 1;
     int errorVal = -1;
 
-    /* Consider changing to integer (network order DWORD) */
-    // valRead = read(clientSocket, this->buffer, strlen(buffer));
-    valRead = recv(clientSocket, (char *)this->buffer.c_str(), sizeof(buffer), flag);
+    valRead = recv(clientSocket, (char *)this->buffer.c_str(), this->buffSize, flag);
     if(valRead != errorVal)
     {
         if(valRead == 0)
@@ -77,7 +75,6 @@ int BTReceiverTCP::receiveNumOfPackets()
         std::string strNumOfPackets = strBuff.substr( strBuff.find(":")+1, strBuff.find("/0")-1);
         int numOfPackets = std::stoi(strNumOfPackets);
         setNumOfPackets(numOfPackets);
-        std::cout << "Num of packets:" << numOfPackets << std::endl;
         return successVal;
     }
     else
@@ -98,9 +95,12 @@ void BTReceiverTCP::handleTraffic()
 {
     const int flag = 0;
     int i = 0;
+    /* Variables for testing - C convension */
     unsigned long total_bytes_read = 0;
     unsigned long total_errors_when_reading = 0;
     unsigned long current_bytes_read = 0;
+
+    std::cout << "Computing throughput..... " << std::endl;
     auto startTime = std::chrono::high_resolution_clock::now();
     for(i = 0; i < this->numOfPackets; ++i)
     {
@@ -121,9 +121,7 @@ void BTReceiverTCP::handleTraffic()
     }
     auto endTime = std::chrono::high_resolution_clock::now();
     auto timeInMiliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
-    std::cout << "accurate_time:" << timeInMiliSeconds << std::endl;
     double accurate_time = (double)timeInMiliSeconds / (double)1000.00;
-    std::cout << "accurate_time:" << accurate_time << std::endl;
     long double throughput = (double)(numOfPackets * buffSize) / (double)accurate_time;
     computeThroughput(throughput);
     std::cout << "Throughput is : " << this->throughputVal << this->throughputType <<" per second. " << std::endl;
@@ -135,37 +133,24 @@ void BTReceiverTCP::sendThroughput()
     int flag = 0;
     std::string strThroughputVal = std::to_string(this->throughputVal);
     std::string finalThrougputMsg = strThroughputVal + " " + this->throughputType;
-    std::cout << "Final message is: " << finalThrougputMsg << std::endl;
     send(clientSocket, finalThrougputMsg.c_str(), finalThrougputMsg.length() , flag);
 }
 
 void BTReceiverTCP::startServer(const int &maxConnectionRequests)
 {
-    const int successVal = 0;
-    const int failedVal = -1;
-    int retVal = -2;
     try
     {
         createSocket();
-    } catch (const std::runtime_error &ex){
-        std::cout << ex.what() << std::endl;
-        return;
-    }
-    try
-    {
         bindSocket();
+        listenForConnection(maxConnectionRequests);
     } catch (const std::runtime_error &ex){
         std::cout << ex.what() << std::endl;
         return;
-    }
-    try
-    {
-        listenForConnection(maxConnectionRequests);
-    } catch (const std::runtime_error &ex) {
-        std::cout << ex.what() << std::endl;
     }
 
-    receiveNumOfPackets();
-    sendResponseOK();
-    handleTraffic();
+    if(receiveNumOfPackets())
+    {
+        sendResponseOK();
+        handleTraffic();
+    }
 }
