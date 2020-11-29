@@ -18,13 +18,13 @@ private:
     sockaddr_in serverAddr;
     sockaddr_in clientAddr;
 
-    void createSocket(); // done.
+    void createSocket();
     void setTimeOut();
-    void bindSocket();  //done.
-    int receiveNumOfPackets(); //done.
-    void sendResponseOK(); //done.
-    void handleTraffic(); //done.
-    void sendThroughput(); //done.
+    void bindSocket();
+    int receiveNumOfPackets();
+    void sendResponseOK();
+    void handleTraffic();
+    void sendThroughput(const double &successInPercents, const int &numOfPacketsLost);
 
 };
 

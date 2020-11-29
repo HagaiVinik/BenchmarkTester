@@ -37,6 +37,10 @@ protected:
     void setNumOfPackets(const int &numOfPackets);
     int getNumOfPackets();
     void computeThroughput(const long double &throughput);
+
+    /*
+     * Note: Consider declaring virtual functions here.
+     */
 };
 
 

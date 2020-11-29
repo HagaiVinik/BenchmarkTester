@@ -30,6 +30,10 @@ protected:
     const int port = 7600;
     int numOfPackets;
     std::string ipAddr;
+
+    /*
+     * Note: Consider declaring virtual functions here.
+     */
 };
 
 #endif //BENCHMARKTESTER_BTSENDER_H

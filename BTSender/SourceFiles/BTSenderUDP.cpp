@@ -48,8 +48,7 @@ int BTSenderUDP::receiveOkResponse()
                  MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
                  &this->serverAddrLen);
 
-    this->buffer.at(this->valRead) = '\0';
-    std::string message(this->buffer);
+    std::string message(this->buffer.substr(0, this->valRead));
     this->buffer.resize(buffSize, 1);
     if(valRead != errorVal)
     {
@@ -73,7 +72,6 @@ int BTSenderUDP::sendTraffic()
 {
     std::cout << "Sending traffic....." << std::endl;
     int flag = 0;
-    std::cout << "numOfPackets:" << this->numOfPackets << std::endl;
     for(int i = 0; i < this->numOfPackets; ++i)
     {
         sendto(this->sock, this->buffer.c_str(), this->buffer.length(),
@@ -108,10 +106,8 @@ void BTSenderUDP::startClient()
         std::cout << ex.what() << std::endl;
         return;
     }
-    std::cout << "Client: Created socket." << std::endl;
     sendNumOfPackets();
     retVal = receiveOkResponse();
     sendTraffic();
     retVal = receiveThroughputResponse();
-    std::cout << "Client Disconnected." << std::endl;
 }

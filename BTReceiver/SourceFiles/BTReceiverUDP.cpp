@@ -12,7 +12,7 @@ BTReceiverUDP::BTReceiverUDP(const int &buffSize, const std::string &ipAddr) : B
 void BTReceiverUDP::createSocket()
 {
     const int failedVal = 0;
-    if ((this->serverFd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 )
+    if ((this->serverFd = socket(AF_INET, SOCK_DGRAM, 0)) < failedVal )
     {
         throw std::runtime_error("ERROR: error in Socket(), creation error");
     }
@@ -32,9 +32,9 @@ void BTReceiverUDP::setTimeOut()
     // consider changing to SO_RCVBUFF
     timeval tv;
 
-    tv.tv_sec = 5;
+    tv.tv_sec = 1;
     tv.tv_usec = 0;
-    int retVal = setsockopt(this->serverFd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv));
+    int retVal = setsockopt(this->serverFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
     if(retVal < 0)
     {
         throw std::runtime_error("ERROR: error in setTomeOut(), setsockopt() failed.");
@@ -56,19 +56,15 @@ int BTReceiverUDP::receiveNumOfPackets()
     int successVal = 0;
     int errorVal = -1;
     unsigned int len = sizeof(this->clientAddr);
-    this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(), sizeof(this->buffer),
+    this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(), this->buffSize,
                              MSG_WAITALL, ( struct sockaddr *) &this->clientAddr,
                              &len);
 
-    this->buffer.at(valRead) = 0;
+    this->buffer.at(this->valRead) = 0;
     if(valRead != errorVal)
     {
-        if(valRead == 0)
-        {
-            return errorVal;
-        }
         std::string strBuff(buffer);
-        std::string strNumOfPackets = strBuff.substr( strBuff.find(":")+1, strBuff.find("/0")-1);
+        std::string strNumOfPackets = strBuff.substr( strBuff.find(':')+1, strBuff.find("/0")-1);
         int numOfPackets = std::stoi(strNumOfPackets);
         setNumOfPackets(numOfPackets);
         std::cout << "Num of packets:" << numOfPackets << std::endl;
@@ -83,13 +79,10 @@ int BTReceiverUDP::receiveNumOfPackets()
 
 void BTReceiverUDP::sendResponseOK()
 {
-    int flag = 0;
     std::string okMessage = "200OK";
-    std::cout << "sending OK response. " << std::endl;
     sendto(this->serverFd, okMessage.c_str(), okMessage.length(),
            MSG_CONFIRM, (const struct sockaddr *) &this->clientAddr,
            sizeof(this->clientAddr));
-    std::cout << "OK message sent. " << std::endl;
 }
 
 void BTReceiverUDP::handleTraffic()
@@ -100,16 +93,18 @@ void BTReceiverUDP::handleTraffic()
      */
 
     const int errorVal = -1;
+
     unsigned int len = sizeof(this->clientAddr);
-    unsigned long total_bytes_read = 0;
-    unsigned long total_errors_when_reading = 0;
-    unsigned long counter_packets_arrived = 0;
-    std::cout << "handling traffic" << std::endl;
+
+    double successInPercents = 0.0;
+    int numOfPacketsLost = 0;
+    unsigned long numOfPacketsArrived = 0;
+
+    std::cout << "computing throughput....." << std::endl;
 
     auto startTime = std::chrono::high_resolution_clock::now();
-    int iterator = 0;
-    int i = 0;
-    for(i = 0; i < this->numOfPackets; ++i)
+
+    for(int i = 0; i < this->numOfPackets; ++i)
     {
         this->valRead = errorVal;
         this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(),
@@ -118,39 +113,45 @@ void BTReceiverUDP::handleTraffic()
 
         if(this->valRead == errorVal)
         {
-            ++total_errors_when_reading;
+            break;
         }
         if (this->valRead != errorVal)
         {
-            counter_packets_arrived++;
-            total_bytes_read += this->valRead;
+            numOfPacketsArrived++;
         }
     }
-    std::cout << "counter_packets_arrived: " << counter_packets_arrived << std::endl;
-    std::cout << "total_errors_when_reading: " << total_errors_when_reading << std::endl;
-    std::cout << "total_bytes_read: " << total_bytes_read << std::endl;
+
     auto endTime = std::chrono::high_resolution_clock::now();
-    std::cout << "Finished handling packets." << std::endl;
-    auto timeInMiliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
-    std::cout << "timeInMiliseconds:" << timeInMiliSeconds << std::endl;
-    double accurate_time = (double)timeInMiliSeconds / (double)1000.00;
-    accurate_time -= 1.00;
-    std::cout << "accurateTime" << accurate_time << std::endl;
+    auto timeInMilliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+    double accurate_time = (double)timeInMilliSeconds / (double)1000.00;
+    if(numOfPacketsArrived < this->numOfPackets)
+        accurate_time -= 1.00;      // timeout set t0 1sec, if all packets arrived,
+                                    //                  there is no need to calculate timeout.
+
+
     long double throughput = (this->numOfPackets * this->buffSize) / (double)accurate_time;
     computeThroughput(throughput);
-    std::cout << "Throughput is : " << this->throughputVal <<
-                                    this->throughputType <<" per second. " << std::endl;
-    sendThroughput();
+
+    successInPercents = ((double)numOfPacketsArrived / (double)this->numOfPackets) * 100.0;
+    numOfPacketsLost = this->numOfPackets - numOfPacketsArrived;
+    sendThroughput(successInPercents, numOfPacketsLost);
 }
 
-void BTReceiverUDP::sendThroughput()
+void BTReceiverUDP::sendThroughput(const double &successInPercents, const int &numOfPacketsLost)
 {
     std::string strThroughputVal = std::to_string(this->throughputVal);
-    std::string finalThrougputMsg = strThroughputVal + " " + this->throughputType;
-    std::cout << "Final message is: " << finalThrougputMsg << std::endl;
-    sendto(this->serverFd, finalThrougputMsg.c_str(), finalThrougputMsg.length(),
+    std::string strSuccessInPercents = std::to_string(successInPercents);
+    std::string strNumOfPacketsLost = std::to_string(numOfPacketsLost);
+    std::string finalThroughputMsg = strThroughputVal + this->throughputType +
+                                     "(" + strSuccessInPercents + "%, lost: " +
+                                     strNumOfPacketsLost + ")";
+
+    std::cout << "Throughput is : " << finalThroughputMsg << " per second. " << std::endl;
+    sendto(this->serverFd, finalThroughputMsg.c_str(), finalThroughputMsg.length(),
            MSG_CONFIRM, (const struct sockaddr *) &this->clientAddr,
            sizeof(this->clientAddr));
+    std::cout << "Sent to client." << std::endl;
 }
 
 void BTReceiverUDP::startServer(const int &maxConnectionRequests)
