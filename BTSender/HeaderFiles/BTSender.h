@@ -15,16 +15,21 @@
 
 
 class BTSender {
+public:
+    BTSender(const std::string &ipAddr, const int &buffSize, const int &numOfPackets);
+    ~BTSender()= default;
+    void printResponse(const std::string &throughput);
+
 protected:
+    int sock;
+    int valRead;
+    sockaddr_in serverAddr;
+
+    int buffSize;
+    std::string buffer;
     const int port = 7600;
     int numOfPackets;
     std::string ipAddr;
-public:
-    BTSender(const std::string &ipAddr);
-    ~BTSender()= default;
-    void setNumOfPackets(const int &numOfPackets=1024);
-    int getNumOfPackets();
-    void printResponse(const std::string &throughput);
 };
 
 #endif //BENCHMARKTESTER_BTSENDER_H

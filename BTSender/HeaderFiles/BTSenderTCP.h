@@ -10,22 +10,15 @@
 
 class BTSenderTCP : BTSender {
 public:
-    BTSenderTCP(const int &buffSize, const std::string &ipAddr);
     BTSenderTCP(const int &buffSize, const std::string &ipAddr, const int &numOfPackets);
     ~BTSenderTCP() = default;
 
     void startClient();
 
 private:
-    int sock;
-    int valRead;
-    sockaddr_in serv_addr;
     /* Hagai:
      * Note: remember to fix buffer an buff size. (size is determind by the client).
      * */
-    int buffSize = 0;
-    char buffer[1024] = {0};
-
     void sendNumOfPackets();
     void createSocket();
     void connectSocket();

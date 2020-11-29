@@ -29,8 +29,6 @@ void BTReceiverTCP::createSocket()
     else if(this->ipAddr == "127.0.0.1")
         this->address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     this->address.sin_port = htons( this->port);
-
-    std::cout << "Socket started." << std::endl;
 }
 
 void BTReceiverTCP::bindSocket()

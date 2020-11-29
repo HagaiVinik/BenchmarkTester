@@ -28,9 +28,7 @@ protected:
     int valRead;
     int opt;
     int buffSize;
-    //char *buffer;
     std::string buffer;
-    //char buffer[1024] = {0};
     int serverFd;
 
     const int port = 7600;

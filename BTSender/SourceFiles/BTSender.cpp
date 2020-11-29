@@ -4,17 +4,11 @@
 
 #include "../HeaderFiles/BTSender.h"
 
-BTSender::BTSender(const std::string &ipAddr) : ipAddr(ipAddr)
+BTSender::BTSender(const std::string &ipAddr, const int &buffSize, const int &numOfPackets)
 {
-}
-
-int BTSender::getNumOfPackets()
-{
-    return this->numOfPackets;
-}
-
-void BTSender::setNumOfPackets(const int &numOfPackets)
-{
+    this->ipAddr = ipAddr;
+    this->buffSize = buffSize;
+    this->buffer.resize(this->buffSize, 0);
     this->numOfPackets = numOfPackets;
 }
 

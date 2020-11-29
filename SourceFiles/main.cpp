@@ -20,11 +20,12 @@ int main(int argc, char* argv[])
 
     if(argc > 1)
     {
-        BTSenderTCP *bt = new BTSenderTCP(buffSize,myIpAddr, 1024*1024);
-        bt->startClient();
-    }else{
         BTReceiverTCP* bt = new BTReceiverTCP(buffSize, myIpAddr);
         bt->startServer();
+
+    }else{
+        BTSenderTCP *bt = new BTSenderTCP(buffSize,myIpAddr, 1024*1024);
+        bt->startClient();
         //delete(bt);
     }
     return 0;
