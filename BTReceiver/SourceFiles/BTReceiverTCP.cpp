@@ -105,10 +105,9 @@ void BTReceiverTCP::handleTraffic()
     for(i = 0; i < this->numOfPackets; ++i)
     {
         current_bytes_read = 0;
-        while( sizeof(buffer) > current_bytes_read )
+        while( this->buffSize > current_bytes_read )
         {
-            valRead = recv(clientSocket, (char *)this->buffer.c_str(), (sizeof(buffer) - current_bytes_read), flag);
-            this->buffer.assign(this->buffer.length(),0);
+            valRead = recv(clientSocket, (char *)this->buffer.c_str(), (this->buffSize - current_bytes_read), flag);
             if (-1 == valRead)
             {
                 total_errors_when_reading++;

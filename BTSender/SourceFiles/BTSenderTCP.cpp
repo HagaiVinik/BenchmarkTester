@@ -57,9 +57,9 @@ void BTSenderTCP::sendNumOfPackets()
 int BTSenderTCP::sendTraffic()
 {
     memset(buffer,1,sizeof(buffer));
+    std::cout << "numOfPackets:" << this->numOfPackets << std::endl;
     std::cout << "Sending traffic....." << std::endl;
     int flag = 0;
-    std::cout << "numOfPackets:" << this->numOfPackets << std::endl;
     for(int i = 0; i < this->numOfPackets; ++i)
     {
         send(sock, buffer, strlen(buffer), flag);

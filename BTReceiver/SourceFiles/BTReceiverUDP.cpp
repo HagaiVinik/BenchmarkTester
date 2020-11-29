@@ -29,10 +29,12 @@ void BTReceiverUDP::createSocket()
 void BTReceiverUDP::setTimeOut()
 {
     // setting timeout for recvfrom()
+    // consider changing to SO_RCVBUFF
     timeval tv;
-    tv.tv_sec = 1;
+
+    tv.tv_sec = 5;
     tv.tv_usec = 0;
-    int retVal = setsockopt(this->serverFd, SOL_SOCKET, SO_RCVBUF, &tv, sizeof(tv));
+    int retVal = setsockopt(this->serverFd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv));
     if(retVal < 0)
     {
         throw std::runtime_error("ERROR: error in setTomeOut(), setsockopt() failed.");
@@ -106,33 +108,23 @@ void BTReceiverUDP::handleTraffic()
 
     auto startTime = std::chrono::high_resolution_clock::now();
     int iterator = 0;
-    while(iterator < this->numOfPackets)
+    int i = 0;
+    for(i = 0; i < this->numOfPackets; ++i)
     {
         this->valRead = errorVal;
-        //while(valRead == -1)
-        //{
-            this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(),
+        this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(),
                                      (sizeof(this->buffer.c_str())), MSG_WAITALL,
                                      ( struct sockaddr *) &this->clientAddr, &len);
 
-            /*if (this->valRead != errorVal)
-            {
-                counter_packets_arrived++;
-                total_bytes_read += this->valRead;
-                total_errors_when_reading = 0;
-            }
-            if(this->valRead == errorVal)
-            {
-                ++total_errors_when_reading;
-            }
-            if(total_errors_when_reading > 100000 && total_bytes_read > 0 )
-            {
-                this->valRead = 0;
-                iterator = this->numOfPackets + 1;
-            }
-
-        }*/
-        ++iterator;
+        if(this->valRead == errorVal)
+        {
+            ++total_errors_when_reading;
+        }
+        if (this->valRead != errorVal)
+        {
+            counter_packets_arrived++;
+            total_bytes_read += this->valRead;
+        }
     }
     std::cout << "counter_packets_arrived: " << counter_packets_arrived << std::endl;
     std::cout << "total_errors_when_reading: " << total_errors_when_reading << std::endl;
@@ -142,7 +134,7 @@ void BTReceiverUDP::handleTraffic()
     auto timeInMiliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
     std::cout << "timeInMiliseconds:" << timeInMiliSeconds << std::endl;
     double accurate_time = (double)timeInMiliSeconds / (double)1000.00;
-
+    accurate_time -= 1.00;
     std::cout << "accurateTime" << accurate_time << std::endl;
     long double throughput = (this->numOfPackets * this->buffSize) / (double)accurate_time;
     computeThroughput(throughput);
@@ -181,6 +173,39 @@ void BTReceiverUDP::startServer(const int &maxConnectionRequests)
         return;
     }
     sendResponseOK();
-    //setTimeOut();
+    setTimeOut();
     handleTraffic();
 }
+
+
+
+/*
+ * while(iterator < this->numOfPackets)
+    {
+        this->valRead = errorVal;
+        //while(valRead == -1)
+        //{
+            this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(),
+                                     (sizeof(this->buffer.c_str())), MSG_WAITALL,
+                                     ( struct sockaddr *) &this->clientAddr, &len);
+
+            /*if (this->valRead != errorVal)
+            {
+                counter_packets_arrived++;
+                total_bytes_read += this->valRead;
+                total_errors_when_reading = 0;
+            }
+            if(this->valRead == errorVal)
+            {
+                ++total_errors_when_reading;
+            }
+            if(total_errors_when_reading > 100000 && total_bytes_read > 0 )
+            {
+                this->valRead = 0;
+                iterator = this->numOfPackets + 1;
+            }
+
+        }
+++iterator;
+}
+*/

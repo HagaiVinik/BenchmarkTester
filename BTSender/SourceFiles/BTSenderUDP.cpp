@@ -88,7 +88,7 @@ int BTSenderUDP::sendTraffic()
     for(int i = 0; i < this->numOfPackets; ++i)
     {
         sendto(sock, buffer, strlen(buffer),
-               MSG_DONTWAIT, (const struct sockaddr *) &this->serverAddr,
+               MSG_CONFIRM, (const struct sockaddr *) &this->serverAddr,
                sizeof(this->serverAddr));
     }
     std::cout << "Finished sending traffic" << std::endl;
