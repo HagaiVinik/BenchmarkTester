@@ -1,3 +1,4 @@
 # ignore main cpp for now.
 HeaderFiles
 SourceFiles
+cmake-build-debug
