@@ -1,7 +1,3 @@
-#include "stdlib.h"
-#include <time.h>
-
-//#include "BTServer.h"
 #include "../BTReceiver/HeaderFiles/BTReceiver.h"
 #include "../BTReceiver/HeaderFiles/BTReceiverTCP.h"
 #include "../BTReceiver/HeaderFiles/BTReceiverUDP.h"
@@ -15,7 +11,18 @@
 
 int main(int argc, char* argv[])
 {
-    std::string myIpAddr = "127.0.0.1";
+
+    char opt;
+    int optionIndex;
+
+
+}
+
+
+/*
+ * For executing application for now:
+ *
+ *     std::string myIpAddr = "127.0.0.1";
     int buffSize = 1024;
 
     if(argc > 1)
@@ -29,4 +36,5 @@ int main(int argc, char* argv[])
         //delete(bt);
     }
     return 0;
-}
+
+ */
