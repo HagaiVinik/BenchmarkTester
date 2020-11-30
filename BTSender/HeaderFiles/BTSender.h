@@ -37,3 +37,4 @@ protected:
 };
 
 #endif //BENCHMARKTESTER_BTSENDER_H
+

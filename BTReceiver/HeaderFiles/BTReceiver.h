@@ -46,6 +46,4 @@ protected:
 
 #endif //BENCHMARKTESTER_BTRECEIVER_H
 
-/*
- * virtual doBT
- */
+

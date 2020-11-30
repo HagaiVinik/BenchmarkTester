@@ -179,34 +179,3 @@ void BTReceiverUDP::startServer(const int &maxConnectionRequests)
 }
 
 
-
-/*
- * while(iterator < this->numOfPackets)
-    {
-        this->valRead = errorVal;
-        //while(valRead == -1)
-        //{
-            this->valRead = recvfrom(this->serverFd, (char *)this->buffer.c_str(),
-                                     (sizeof(this->buffer.c_str())), MSG_WAITALL,
-                                     ( struct sockaddr *) &this->clientAddr, &len);
-
-            /*if (this->valRead != errorVal)
-            {
-                counter_packets_arrived++;
-                total_bytes_read += this->valRead;
-                total_errors_when_reading = 0;
-            }
-            if(this->valRead == errorVal)
-            {
-                ++total_errors_when_reading;
-            }
-            if(total_errors_when_reading > 100000 && total_bytes_read > 0 )
-            {
-                this->valRead = 0;
-                iterator = this->numOfPackets + 1;
-            }
-
-        }
-++iterator;
-}
-*/

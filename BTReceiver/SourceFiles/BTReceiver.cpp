@@ -56,3 +56,4 @@ void BTReceiver::computeThroughput(const long double &throughput)
     }
     this->throughputVal = result;
 }
+

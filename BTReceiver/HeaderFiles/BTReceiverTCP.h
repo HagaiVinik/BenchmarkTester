@@ -32,6 +32,5 @@ private:
 
 #endif //BENCHMARKTESTER_BTRECEIVERTCP_H
 
-/*
- * startBT instead of all public methods.
- */
+
+
