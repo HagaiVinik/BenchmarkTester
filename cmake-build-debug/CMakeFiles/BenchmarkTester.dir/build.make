@@ -77,18 +77,18 @@ include CMakeFiles/BenchmarkTester.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/BenchmarkTester.dir/flags.make
 
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: CMakeFiles/BenchmarkTester.dir/flags.make
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../SourceFiles/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o -c /home/hagai/CLionProjects/BenchmarkTester/SourceFiles/main.cpp
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: CMakeFiles/BenchmarkTester.dir/flags.make
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/BenchmarkTester.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/BenchmarkTester.dir/main.cpp.o -c /home/hagai/CLionProjects/BenchmarkTester/main.cpp
 
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hagai/CLionProjects/BenchmarkTester/SourceFiles/main.cpp > CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.i
+CMakeFiles/BenchmarkTester.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/BenchmarkTester.dir/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hagai/CLionProjects/BenchmarkTester/main.cpp > CMakeFiles/BenchmarkTester.dir/main.cpp.i
 
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hagai/CLionProjects/BenchmarkTester/SourceFiles/main.cpp -o CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.s
+CMakeFiles/BenchmarkTester.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/BenchmarkTester.dir/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hagai/CLionProjects/BenchmarkTester/main.cpp -o CMakeFiles/BenchmarkTester.dir/main.cpp.s
 
 CMakeFiles/BenchmarkTester.dir/SourceFiles/BTServer.cpp.o: CMakeFiles/BenchmarkTester.dir/flags.make
 CMakeFiles/BenchmarkTester.dir/SourceFiles/BTServer.cpp.o: ../SourceFiles/BTServer.cpp
@@ -196,7 +196,7 @@ CMakeFiles/BenchmarkTester.dir/BTSender/SourceFiles/BTSenderUDP.cpp.s: cmake_for
 
 # Object files for target BenchmarkTester
 BenchmarkTester_OBJECTS = \
-"CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o" \
+"CMakeFiles/BenchmarkTester.dir/main.cpp.o" \
 "CMakeFiles/BenchmarkTester.dir/SourceFiles/BTServer.cpp.o" \
 "CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o" \
 "CMakeFiles/BenchmarkTester.dir/BTReceiver/SourceFiles/BTReceiver.cpp.o" \
@@ -209,7 +209,7 @@ BenchmarkTester_OBJECTS = \
 # External object files for target BenchmarkTester
 BenchmarkTester_EXTERNAL_OBJECTS =
 
-BenchmarkTester: CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o
+BenchmarkTester: CMakeFiles/BenchmarkTester.dir/main.cpp.o
 BenchmarkTester: CMakeFiles/BenchmarkTester.dir/SourceFiles/BTServer.cpp.o
 BenchmarkTester: CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o
 BenchmarkTester: CMakeFiles/BenchmarkTester.dir/BTReceiver/SourceFiles/BTReceiver.cpp.o

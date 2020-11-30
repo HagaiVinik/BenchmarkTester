@@ -14,9 +14,10 @@ To use DPDK features you will need to install:
 * PcapPlusPlus API (can be found on Github).
 
 ## Example  for executing program :
-* Server side: "./BenchmarkTester -s -buffer 1024 -local"
-* Client side: "./BenchmarkTester -c -buffer 1024 -nop 1024 -local" (nop - num of packets)
-* DPDK option: "-dpdk tcp" (tcp/udp)
+##### execute: "./BenchmarkTester -h" for more info.
+* Server side: "./BenchmarkTester -s -b 1024 "
+* Client side: "./BenchmarkTester -c -b 1024 -p 1024 " (p - num of packets)
+* DPDK option: "-dpdk tcp" (tcp/udp) // not available
 
 ### Details:
 #### Author: Hagai Vinik.

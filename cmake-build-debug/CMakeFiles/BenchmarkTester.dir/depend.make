@@ -58,12 +58,12 @@ CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o: /usr/local/include
 CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o: /usr/local/include/pcapplusplus/RawPacket.h
 CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o: /usr/local/include/pcapplusplus/WinPcapLiveDevice.h
 
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../BTReceiver/HeaderFiles/BTReceiver.h
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../BTReceiver/HeaderFiles/BTReceiverTCP.h
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../BTReceiver/HeaderFiles/BTReceiverUDP.h
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../BTSender/HeaderFiles/BTSender.h
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../BTSender/HeaderFiles/BTSenderTCP.h
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../BTSender/HeaderFiles/BTSenderUDP.h
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: ../SourceFiles/main.cpp
-CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o: /usr/local/include/pcapplusplus/SystemUtils.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../BTReceiver/HeaderFiles/BTReceiver.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../BTReceiver/HeaderFiles/BTReceiverTCP.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../BTReceiver/HeaderFiles/BTReceiverUDP.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../BTSender/HeaderFiles/BTSender.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../BTSender/HeaderFiles/BTSenderTCP.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../BTSender/HeaderFiles/BTSenderUDP.h
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: ../main.cpp
+CMakeFiles/BenchmarkTester.dir/main.cpp.o: /usr/local/include/pcapplusplus/SystemUtils.h
 

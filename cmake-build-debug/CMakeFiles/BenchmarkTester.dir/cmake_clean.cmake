@@ -9,7 +9,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/BenchmarkTester.dir/BTSender/SourceFiles/BTSenderUDP.cpp.o"
   "CMakeFiles/BenchmarkTester.dir/SourceFiles/BTServer.cpp.o"
   "CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o"
-  "CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o"
+  "CMakeFiles/BenchmarkTester.dir/main.cpp.o"
 )
 
 # Per-language clean rules from dependency scanning.

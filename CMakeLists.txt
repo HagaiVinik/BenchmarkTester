@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(HeaderFiles)
 
-add_executable(BenchmarkTester SourceFiles/main.cpp
+add_executable(BenchmarkTester main.cpp
         HeaderFiles/BTServer.h
         SourceFiles/BTServer.cpp
         HeaderFiles/PacketStats.h

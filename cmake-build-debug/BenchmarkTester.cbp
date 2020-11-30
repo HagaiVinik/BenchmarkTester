@@ -134,7 +134,7 @@
 		<Unit filename="/home/hagai/CLionProjects/BenchmarkTester/SourceFiles/PacketStats.cpp">
 			<Option target="BenchmarkTester"/>
 		</Unit>
-		<Unit filename="/home/hagai/CLionProjects/BenchmarkTester/SourceFiles/main.cpp">
+		<Unit filename="/home/hagai/CLionProjects/BenchmarkTester/main.cpp">
 			<Option target="BenchmarkTester"/>
 		</Unit>
 		<Unit filename="/home/hagai/CLionProjects/BenchmarkTester/CMakeLists.txt">

@@ -12,7 +12,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/hagai/CLionProjects/BenchmarkTester/BTSender/SourceFiles/BTSenderUDP.cpp" "/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles/BenchmarkTester.dir/BTSender/SourceFiles/BTSenderUDP.cpp.o"
   "/home/hagai/CLionProjects/BenchmarkTester/SourceFiles/BTServer.cpp" "/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles/BenchmarkTester.dir/SourceFiles/BTServer.cpp.o"
   "/home/hagai/CLionProjects/BenchmarkTester/SourceFiles/PacketStats.cpp" "/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.o"
-  "/home/hagai/CLionProjects/BenchmarkTester/SourceFiles/main.cpp" "/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o"
+  "/home/hagai/CLionProjects/BenchmarkTester/main.cpp" "/home/hagai/CLionProjects/BenchmarkTester/cmake-build-debug/CMakeFiles/BenchmarkTester.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -359,32 +359,32 @@ SourceFiles/PacketStats.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/SourceFiles/PacketStats.cpp.s
 .PHONY : SourceFiles/PacketStats.cpp.s
 
-SourceFiles/main.o: SourceFiles/main.cpp.o
+main.o: main.cpp.o
 
-.PHONY : SourceFiles/main.o
+.PHONY : main.o
 
 # target to build an object file
-SourceFiles/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.o
-.PHONY : SourceFiles/main.cpp.o
+main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-SourceFiles/main.i: SourceFiles/main.cpp.i
+main.i: main.cpp.i
 
-.PHONY : SourceFiles/main.i
+.PHONY : main.i
 
 # target to preprocess a source file
-SourceFiles/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.i
-.PHONY : SourceFiles/main.cpp.i
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-SourceFiles/main.s: SourceFiles/main.cpp.s
+main.s: main.cpp.s
 
-.PHONY : SourceFiles/main.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-SourceFiles/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/SourceFiles/main.cpp.s
-.PHONY : SourceFiles/main.cpp.s
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BenchmarkTester.dir/build.make CMakeFiles/BenchmarkTester.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -419,9 +419,9 @@ help:
 	@echo "... SourceFiles/PacketStats.o"
 	@echo "... SourceFiles/PacketStats.i"
 	@echo "... SourceFiles/PacketStats.s"
-	@echo "... SourceFiles/main.o"
-	@echo "... SourceFiles/main.i"
-	@echo "... SourceFiles/main.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 
