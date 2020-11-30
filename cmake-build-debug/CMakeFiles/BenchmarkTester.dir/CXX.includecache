@@ -53,9 +53,9 @@ BTSender.h
 /home/hagai/CLionProjects/BenchmarkTester/BTSender/HeaderFiles/BTSender.h
 
 /home/hagai/CLionProjects/BenchmarkTester/SourceFiles/main.cpp
-stdlib.h
-/home/hagai/CLionProjects/BenchmarkTester/SourceFiles/stdlib.h
-time.h
+SystemUtils.h
+-
+getopt.h
 -
 ../BTReceiver/HeaderFiles/BTReceiver.h
 /home/hagai/CLionProjects/BenchmarkTester/BTReceiver/HeaderFiles/BTReceiver.h
@@ -69,4 +69,16 @@ time.h
 /home/hagai/CLionProjects/BenchmarkTester/BTSender/HeaderFiles/BTSenderTCP.h
 ../BTSender/HeaderFiles/BTSenderUDP.h
 /home/hagai/CLionProjects/BenchmarkTester/BTSender/HeaderFiles/BTSenderUDP.h
+
+/usr/local/include/pcapplusplus/SystemUtils.h
+stdint.h
+-
+string
+-
+vector
+-
+windows.h
+-
+pthread.h
+-
 
