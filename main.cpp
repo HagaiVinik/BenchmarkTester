@@ -5,6 +5,7 @@
 #include "BTReceiver/HeaderFiles/BTReceiver.h"
 #include "BTReceiver/HeaderFiles/BTReceiverTCP.h"
 #include "BTReceiver/HeaderFiles/BTReceiverUDP.h"
+#include "BTReceiver/BTReceiverDPDK/HeaderFiles/BTReceiverDPDK.h"
 #include "BTSender/HeaderFiles/BTSender.h"
 #include "BTSender/HeaderFiles/BTSenderTCP.h"
 #include "BTSender/HeaderFiles/BTSenderUDP.h"
@@ -47,10 +48,10 @@ void printUsage()
            "    -h help         : Display this help message and exit\n\n";
 }
 
-
+/*
 int main(int argc, char* argv[])
 {
-    /* Default values. */
+    /* Default values.
     std::string myIpAddr = "127.0.0.1";
     int buffSize = 1024;
     int numOfPackets = 1024;
@@ -135,4 +136,12 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+*/
 
+int main(int argc, char* argv[])
+{
+    std::string myIpAddr = "127.0.0.1";
+    int buffSize = 1024;
+    BTReceiverDPDK *bt = new BTReceiverDPDK(myIpAddr, buffSize);
+    return 0;
+}

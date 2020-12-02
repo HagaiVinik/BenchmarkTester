@@ -21,17 +21,30 @@ add_executable(BenchmarkTester main.cpp
         BTReceiver/SourceFiles/BTReceiver.cpp
         BTReceiver/HeaderFiles/BTReceiverTCP.h
         BTReceiver/SourceFiles/BTReceiverTCP.cpp
+        BTReceiver/HeaderFiles/BTReceiverUDP.h
+        BTReceiver/SourceFiles/BTReceiverUDP.cpp
 
         BTSender/HeaderFiles/BTSender.h
         BTSender/SourceFiles/BTSender.cpp
         BTSender/HeaderFiles/BTSenderTCP.h
-        BTSender/SourceFiles/BTSenderTCP.cpp BTReceiver/SourceFiles/BTReceiverUDP.cpp BTReceiver/HeaderFiles/BTReceiverUDP.h BTSender/SourceFiles/BTSenderUDP.cpp BTSender/HeaderFiles/BTSenderUDP.h)
+        BTSender/SourceFiles/BTSenderTCP.cpp
+        BTSender/SourceFiles/BTSenderUDP.cpp
+        BTSender/HeaderFiles/BTSenderUDP.h
+        BTReceiver/BTReceiverDPDK/SourceFiles/BTReceiverDPDK.cpp
+        BTReceiver/BTReceiverDPDK/HeaderFiles/BTReceiverDPDK.h
+        BTReceiver/BTReceiverDPDK/SourceFiles/L2FwdWorkerThread.cpp
+        BTReceiver/BTReceiverDPDK/HeaderFiles/L2FwdWorkerThread.h )
 
 
 include_directories(/usr/local/include/pcapplusplus)
+include_directories(/home/hagai/Downloads/dpdk-stable-18.11.10/build/include)
+link_directories(/home/hagai/Downloads/dpdk-stable-18.11.10/build/lib)
 
+set(DPDK_LIBS "-Wl,--whole-archive -ldpdk -Wl,--no-whole-archive")
+
+target_link_libraries(${PROJECT_NAME} ${DPDK_LIBS})
 target_link_libraries(${PROJECT_NAME} Pcap++ Packet++ Common++ pcap)
-target_link_libraries(${PROJECT_NAME} pthread )
+target_link_libraries(${PROJECT_NAME} pthread dl rt m numa)
 
 
 
