@@ -6,7 +6,7 @@
 * DPDK TCP test //not ready yet
 * DPDK UDP test //not ready yet
 
-All tests let client decide size of buffer and number of packets to send.
+All tests let client decide size of _buffer and number of packets to send.
 
 #### DPDK: 
 To use DPDK features you will need to install:

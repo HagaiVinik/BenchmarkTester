@@ -2,11 +2,11 @@
 // Created by hagai on 19/11/2020.
 //
 
-#ifndef BENCHMARKTESTER_BTRECEIVERTCP_H
-#define BENCHMARKTESTER_BTRECEIVERTCP_H
+#ifndef BENCHMARKTESTER_BTRECEIVERTCP_HPP
+#define BENCHMARKTESTER_BTRECEIVERTCP_HPP
 
 
-#include "BTReceiver.h"
+#include "BTReceiver.hpp"
 
 
 class BTReceiverTCP : public BTReceiver {
@@ -16,21 +16,22 @@ public:
     void startServer(const int &maxConnectionRequests=1);
 
 private:
-    int clientSocket;
-    sockaddr_in address;
-    int addrLen = sizeof(address);
+    int _clientSocket;
+    sockaddr_in _address;
 
+    const int ADDR_LEN = sizeof(_address);
     void createSocket();
     void bindSocket();
-    void listenForConnection(const int &maxConnectionRequests=1);
+    void listenForConnection(const int maxConnectionRequests=1);
     int receiveNumOfPackets();
     void sendResponseOK();
     void handleTraffic();
     void sendThroughput();
+    long double calculateThroughputVal(long timeInMiliSeconds);
 };
 
 
-#endif //BENCHMARKTESTER_BTRECEIVERTCP_H
+#endif //BENCHMARKTESTER_BTRECEIVERTCP_HPP
 
 
 

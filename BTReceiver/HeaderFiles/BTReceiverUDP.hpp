@@ -2,21 +2,22 @@
 // Created by hagai on 24/11/2020.
 //
 
-#ifndef BENCHMARKTESTER_BTRECEIVERUDP_H
-#define BENCHMARKTESTER_BTRECEIVERUDP_H
+#ifndef BENCHMARKTESTER_BTRECEIVERUDP_HPP
+#define BENCHMARKTESTER_BTRECEIVERUDP_HPP
 
 
-#include "BTReceiver.h"
+#include "BTReceiver.hpp"
 
 
 class BTReceiverUDP : public BTReceiver {
 public:
     BTReceiverUDP(const int &buff_size,const std::string &ipAddr);
     ~BTReceiverUDP() = default;
-    void startServer(const int &maxConnectionRequests=1);
+    void startServer(const int maxConnectionRequests=1);
+
 private:
-    sockaddr_in serverAddr;
-    sockaddr_in clientAddr;
+    sockaddr_in _serverAddr;
+    sockaddr_in _clientAddr;
 
     void createSocket();
     void setTimeOut();
@@ -25,9 +26,8 @@ private:
     void sendResponseOK();
     void handleTraffic();
     void sendThroughput(const double &successInPercents, const int &numOfPacketsLost);
-
 };
 
 
-#endif //BENCHMARKTESTER_BTRECEIVERUDP_H
+#endif //BENCHMARKTESTER_BTRECEIVERUDP_HPP
 

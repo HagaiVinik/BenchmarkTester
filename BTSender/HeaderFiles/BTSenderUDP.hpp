@@ -2,10 +2,10 @@
 // Created by hagai on 24/11/2020.
 //
 
-#ifndef BENCHMARKTESTER_BTSENDERUDP_H
-#define BENCHMARKTESTER_BTSENDERUDP_H
+#ifndef BENCHMARKTESTER_BTSENDERUDP_HPP
+#define BENCHMARKTESTER_BTSENDERUDP_HPP
 
-#include "BTSender.h"
+#include "BTSender.hpp"
 
 
 class BTSenderUDP : BTSender {
@@ -16,10 +16,10 @@ public:
     void startClient();
 
 private:
-    unsigned int serverAddrLen = sizeof(serverAddr);
+    unsigned int _serverAddrLen;
 
     /* Hagai:
-     * Note: remember to fix buffer an buff size. (size is determind by the client).
+     * Note: remember to fix _buffer an buff size. (size is determind by the client).
      * */
 
     void createSocket();
@@ -30,5 +30,5 @@ private:
 };
 
 
-#endif //BENCHMARKTESTER_BTSENDERUDP_H
+#endif //BENCHMARKTESTER_BTSENDERUDP_HPP
 

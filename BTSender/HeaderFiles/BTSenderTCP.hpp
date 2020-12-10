@@ -2,10 +2,10 @@
 // Created by hagai on 22/11/2020.
 //
 
-#ifndef BENCHMARKTESTER_BTSENDERTCP_H
-#define BENCHMARKTESTER_BTSENDERTCP_H
+#ifndef BENCHMARKTESTER_BTSENDERTCP_HPP
+#define BENCHMARKTESTER_BTSENDERTCP_HPP
 
-#include "BTSender.h"
+#include "BTSender.hpp"
 
 
 class BTSenderTCP : BTSender {
@@ -17,7 +17,7 @@ public:
 
 private:
     /* Hagai:
-     * Note: remember to fix buffer an buff size. (size is determind by the client).
+     * Note: remember to fix _buffer an buff size. (size is determind by the client).
      * */
     void sendNumOfPackets();
     void createSocket();
@@ -29,5 +29,5 @@ private:
 };
 
 
-#endif //BENCHMARKTESTER_BTSENDERTCP_H
+#endif //BENCHMARKTESTER_BTSENDERTCP_HPP
 
