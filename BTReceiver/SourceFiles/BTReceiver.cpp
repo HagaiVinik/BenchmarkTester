@@ -2,57 +2,43 @@
 // Created by hagai on 18/11/2020.
 //
 
-#include "../HeaderFiles/BTReceiver.h"
+#include "BTReceiver.hpp"
 
 BTReceiver::BTReceiver(const std::string &ipAddr, const int &buffSize)
+:   _throughputVal(0.0),
+    _throughputType(""),
+    _opt(1),
+    _buffSize(buffSize),
+    _ipAddr(ipAddr)
 {
-    this->throughputVal = 0.0;
-    this->throughputType = "";
-    this->opt = 1;
-    this->buffSize = buffSize;
-    this->ipAddr = ipAddr;
-    this->buffer.resize(this->buffSize, 0);
-    //this->buffer = new char[this->buffSize]();
-    //memset(this->buffer, 0, buffSize);
-}
-
-std::string BTReceiver::getIpAddr()
-{
-    return ipAddr;
-}
-
-int BTReceiver::getPort()
-{
-    return port;
-}
-
-int BTReceiver::getNumOfPackets()
-{
-    return this->numOfPackets;
+    _buffer.resize(_buffSize, 0);
 }
 
 void BTReceiver::setNumOfPackets(const int &numOfPackets)
 {
-    this->numOfPackets = numOfPackets;
+    _numOfPackets = numOfPackets;
 }
 
 void BTReceiver::computeThroughput(const long double &throughput)
 {
     double result = 0.0;
-    if (throughput >= 1073741824.0)
+    if (throughput >= GB_SIZE)
     {
-        result = throughput / 1073741824.0;
-        this->throughputType = "GB";
+        result = throughput / GB_SIZE;
+        _throughputType = "GB";
     }
-    else if (throughput >= 1048576.0)
+    else if (throughput >= MB_SIZE)
     {
-        result = throughput / 1048576.0;
-        this->throughputType = "MB";
+        result = throughput / MB_SIZE;
+        _throughputType = "MB";
     }
-    else if(throughput >= 1024.0)
+    else if(throughput >= KB_SIZE)
     {
-        result = throughput / 1024.0;
-        this->throughputType = "KB";
+        result = throughput / KB_SIZE;
+        _throughputType = "KB";
     }
-    this->throughputVal = result;
+    _throughputVal = result;
 }
+
+
+
