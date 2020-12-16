@@ -1,4 +1,7 @@
-# ignore main cpp for now.
-HeaderFiles
-SourceFiles
+/* unnecessary folders */
 cmake-build-debug
+.idea
+build
+
+# Will delete later.
+temp

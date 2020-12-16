@@ -16,7 +16,7 @@
 
 #include "L2FwdWorkerThread.h"
 
-#include "../../HeaderFiles/BTReceiver.h"
+#include "BTReceiver.hpp"
 
 #define MBUF_POOL_SIZE 16*1024-1
 #define DEVICE_ID_1 0

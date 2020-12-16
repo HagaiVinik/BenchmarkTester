@@ -2,8 +2,8 @@
 // Created by hagai on 22/11/2020.
 //
 
-#ifndef BENCHMARKTESTER_BTSENDER_H
-#define BENCHMARKTESTER_BTSENDER_H
+#ifndef BENCHMARKTESTER_BTSENDER_HPP
+#define BENCHMARKTESTER_BTSENDER_HPP
 
 #include <iostream>
 #include <cstring>
@@ -21,20 +21,16 @@ public:
     void printResponse(const std::string &throughput);
 
 protected:
-    int sock;
-    int valRead;
-    sockaddr_in serverAddr;
+    int _sock;
+    int _valRead;
+    sockaddr_in _serverAddr;
 
-    int buffSize;
-    std::string buffer;
-    const int port = 7600;
-    int numOfPackets;
-    std::string ipAddr;
-
-    /*
-     * Note: Consider declaring virtual functions here.
-     */
+    int _buffSize;
+    std::string _buffer;
+    static constexpr int PORT = 7600;
+    int _numOfPackets;
+    std::string _ipAddr;
 };
 
-#endif //BENCHMARKTESTER_BTSENDER_H
+#endif //BENCHMARKTESTER_BTSENDER_HPP
 

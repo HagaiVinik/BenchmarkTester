@@ -3,37 +3,29 @@ project(BenchmarkTester)
 
 set(CMAKE_CXX_STANDARD 14)
 
-#set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
-#set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-#set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-#set(PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
+
+#include_directories(HeaderFiles)
+include_directories(BTReceiver/BTReceiverDPDK/HeaderFiles)
+include_directories(BTReceiver/HeaderFiles)
+include_directories(BTSender/HeaderFiles)
+
+# Will add this later:
+#       BTReceiver/temp/BTServer.h
+#        BTReceiver/temp/BTServer.cpp
+#        BTReceiver/temp/PacketStats.h
+#        BTReceiver/temp/PacketStats.cpp
 
 
-include_directories(HeaderFiles)
+file(GLOB_RECURSE BTRECEIVER_HEADERS BTReceiver/HeaderFiles/*.hpp)
+file(GLOB_RECURSE BTRECEIVER_SOURCES BTReceiver/SourceFiles/*.cpp)
+file(GLOB_RECURSE BTSENDER_HEADERS BTSender/HeaderFiles/*.hpp)
+file(GLOB_RECURSE BTSENDER_SOURCES BTSender/SourceFiles/*.cpp)
 
 add_executable(BenchmarkTester main.cpp
-        HeaderFiles/BTServer.h
-        SourceFiles/BTServer.cpp
-        HeaderFiles/PacketStats.h
-        SourceFiles/PacketStats.cpp
-
-        BTReceiver/HeaderFiles/BTReceiver.h
-        BTReceiver/SourceFiles/BTReceiver.cpp
-        BTReceiver/HeaderFiles/BTReceiverTCP.h
-        BTReceiver/SourceFiles/BTReceiverTCP.cpp
-        BTReceiver/HeaderFiles/BTReceiverUDP.h
-        BTReceiver/SourceFiles/BTReceiverUDP.cpp
-
-        BTSender/HeaderFiles/BTSender.h
-        BTSender/SourceFiles/BTSender.cpp
-        BTSender/HeaderFiles/BTSenderTCP.h
-        BTSender/SourceFiles/BTSenderTCP.cpp
-        BTSender/SourceFiles/BTSenderUDP.cpp
-        BTSender/HeaderFiles/BTSenderUDP.h
-        BTReceiver/BTReceiverDPDK/SourceFiles/BTReceiverDPDK.cpp
-        BTReceiver/BTReceiverDPDK/HeaderFiles/BTReceiverDPDK.h
-        BTReceiver/BTReceiverDPDK/SourceFiles/L2FwdWorkerThread.cpp
-        BTReceiver/BTReceiverDPDK/HeaderFiles/L2FwdWorkerThread.h )
+        ${BTRECEIVER_HEADERS}
+        ${BTRECEIVER_SOURCES}
+        ${BTSENDER_HEADERS}
+        ${BTSENDER_SOURCES})
 
 
 include_directories(/usr/local/include/pcapplusplus)

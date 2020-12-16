@@ -2,55 +2,56 @@
 // Created by hagai on 24/11/2020.
 //
 
-#include "../HeaderFiles/BTSenderUDP.h"
+#include "BTSenderUDP.hpp"
 
-BTSenderUDP::BTSenderUDP(const int &buffSize, const std::string &ipAddr,
-                         const int &numOfPackets) :BTSender(ipAddr, buffSize, numOfPackets)
+BTSenderUDP::BTSenderUDP(const int &buffSize, const std::string &ipAddr, const int &numOfPackets) :
+                         BTSender(ipAddr, buffSize, numOfPackets) ,
+                         _serverAddrLen(sizeof(_serverAddr))
 {
 }
 
 void BTSenderUDP::createSocket()
 {
-    const int failedVal = 0;
-    if ( (this->sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+    static constexpr int failedVal = 0;
+    if ((_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         throw std::runtime_error("ERROR: error in createSocket(), socket() failed");
     }
 
-    std::memset(&this->serverAddr, 0, sizeof(this->serverAddr));
+    std::memset(&_serverAddr, 0, sizeof(_serverAddr));
 
-    this->serverAddr.sin_family = AF_INET;
-    this->serverAddr.sin_port = htons(this->port);
-    if(this->ipAddr == "0.0.0.0")
-        this->serverAddr.sin_addr.s_addr = INADDR_ANY;
-    else if(this->ipAddr == "127.0.0.1")
-        this->serverAddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    this->serverAddr.sin_addr.s_addr = INADDR_ANY;
+    _serverAddr.sin_family = AF_INET;
+    _serverAddr.sin_port = htons(PORT);
+    if(_ipAddr == "0.0.0.0")
+        _serverAddr.sin_addr.s_addr = INADDR_ANY;
+    else if(_ipAddr == "127.0.0.1")
+        _serverAddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    _serverAddr.sin_addr.s_addr = INADDR_ANY;
 }
 
 void BTSenderUDP::sendNumOfPackets()
 {
-    int flag = 0;
-    std::string strNumOfPackets = std::to_string(this->numOfPackets);
+    static constexpr int flag = 0;
+    std::string strNumOfPackets = std::to_string(_numOfPackets);
     std::string msg = "num_of_packets:";
     msg.append(strNumOfPackets);
     std::cout << "message is: " << msg << std::endl;
-    int retVal = sendto(this->sock, msg.c_str(), msg.length(),MSG_CONFIRM,
-                    (const struct sockaddr *) &this->serverAddr,
-                                sizeof(this->serverAddr));
+    int retVal = sendto(_sock, msg.c_str(), msg.length(), MSG_CONFIRM,
+                        (const struct sockaddr *) &_serverAddr,
+                        sizeof(_serverAddr));
 }
 
 int BTSenderUDP::receiveOkResponse()
 {
-    int flag = 0;
-    int successVal = 0;
-    int errorVal = -1;
-    this->valRead = recvfrom(this->sock, (char *)this->buffer.c_str(), this->buffSize,
-                 MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
-                 &this->serverAddrLen);
+    static constexpr int flag = 0;
+    static constexpr int successVal = 0;
+    static constexpr int errorVal = -1;
+    _valRead = recvfrom(_sock, (char *)_buffer.c_str(), _buffSize,
+                              MSG_WAITALL, (struct sockaddr *) &_serverAddr,
+                              &_serverAddrLen);
 
-    std::string message(this->buffer.substr(0, this->valRead));
-    this->buffer.resize(buffSize, 1);
-    if(valRead != errorVal)
+    std::string message(_buffer.substr(0, _valRead));
+    _buffer.resize(_buffSize, 1);
+    if(_valRead != errorVal)
     {
         if (message == "200OK")
         {
@@ -71,12 +72,12 @@ int BTSenderUDP::receiveOkResponse()
 int BTSenderUDP::sendTraffic()
 {
     std::cout << "Sending traffic....." << std::endl;
-    int flag = 0;
-    for(int i = 0; i < this->numOfPackets; ++i)
+    static constexpr int flag = 0;
+    for(int i = 0; i < _numOfPackets; ++i)
     {
-        sendto(this->sock, this->buffer.c_str(), this->buffer.length(),
-               MSG_CONFIRM, (const struct sockaddr *) &this->serverAddr,
-               sizeof(this->serverAddr));
+        sendto(_sock, _buffer.c_str(), _buffer.length(),
+               MSG_CONFIRM, (const struct sockaddr *) &_serverAddr,
+               sizeof(_serverAddr));
     }
     std::cout << "Finished sending traffic" << std::endl;
     return 0;
@@ -84,22 +85,21 @@ int BTSenderUDP::sendTraffic()
 
 int BTSenderUDP::receiveThroughputResponse()
 {
-    int flag = 0;
-    int successVal = 0;
-    int errorVal = -1;
-    this->valRead = recvfrom(this->sock, (char *)this->buffer.c_str(), this->buffSize,
-                             MSG_WAITALL, (struct sockaddr *) &this->serverAddr,
-                             &this->serverAddrLen);
+    static constexpr int flag = 0;
+    static constexpr int successVal = 0;
+    static constexpr int errorVal = -1;
+    _valRead = recvfrom(_sock, (char *)_buffer.c_str(), _buffSize,
+                              MSG_WAITALL, (struct sockaddr *) &_serverAddr,
+                              &_serverAddrLen);
 
     /*  NOTE: Check message on a string type   */
-    std::string throughput(this->buffer);
+    std::string throughput(_buffer);
     printResponse(throughput);
-    return this->valRead;
+    return _valRead;
 }
 
 void BTSenderUDP::startClient()
 {
-    int retVal = -1;
     try{
         createSocket();
     } catch (const std::runtime_error &ex) {
@@ -107,7 +107,7 @@ void BTSenderUDP::startClient()
         return;
     }
     sendNumOfPackets();
-    retVal = receiveOkResponse();
+    receiveOkResponse();
     sendTraffic();
-    retVal = receiveThroughputResponse();
+    receiveThroughputResponse();
 }

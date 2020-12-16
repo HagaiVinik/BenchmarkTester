@@ -2,13 +2,14 @@
 #include <getopt.h>
 
 
-#include "BTReceiver/HeaderFiles/BTReceiver.h"
-#include "BTReceiver/HeaderFiles/BTReceiverTCP.h"
-#include "BTReceiver/HeaderFiles/BTReceiverUDP.h"
-#include "BTReceiver/BTReceiverDPDK/HeaderFiles/BTReceiverDPDK.h"
-#include "BTSender/HeaderFiles/BTSender.h"
-#include "BTSender/HeaderFiles/BTSenderTCP.h"
-#include "BTSender/HeaderFiles/BTSenderUDP.h"
+#include "../BTReceiverDPDK/HeaderFiles/BTReceiverDPDK.h"
+#include "../BTReceiverDPDK/HeaderFiles/L2FwdWorkerThread.h"
+#include "BTReceiver/HeaderFiles/BTReceiver.hpp"
+#include "BTReceiver/HeaderFiles/BTReceiverTCP.hpp"
+#include "BTReceiver/HeaderFiles/BTReceiverUDP.hpp"
+#include "BTSender/HeaderFiles/BTSender.hpp"
+#include "BTSender/HeaderFiles/BTSenderTCP.hpp"
+#include "BTSender/HeaderFiles/BTSenderUDP.hpp"
 
 
 const std::string SOFTWARE_VERSION = "1.0";
@@ -21,8 +22,8 @@ static struct option BTOptions[] =
                 {"UDP", no_argument, 0, 'u'},
                 {"help", no_argument, 0, 'h'},
                 {"version", no_argument, 0, 'v'},
-                {"numOfPackets", required_argument, 0, 'p'},
-                {"buffSize", required_argument, 0, 'b'},
+                {"_numOfPackets", required_argument, 0, 'p'},
+                {"_buffSize", required_argument, 0, 'b'},
                 {0, 0, 0, 0}
         };
 
@@ -40,8 +41,8 @@ void printUsage()
            "\nOptions:\n\n"
            "    -c client       : starts program as a client side\n"
            "    -s server       : starts program as a server side\n"
-           "    -b buffSize     : sets size of the buffer\n"
-           "    -p numOfPackets : sets number of packets to measure\n"
+           "    -b _buffSize     : sets size of the _buffer\n"
+           "    -p _numOfPackets : sets number of packets to measure\n"
            "    -u UDP          : use UDP protocol instead of TCP\n"
            "    -d dpdk         : Use DPDK technology\n"
            "    -v version      : Display the current version and exit\n"

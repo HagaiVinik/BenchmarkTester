@@ -2,7 +2,7 @@
 // Created by hagai on 02/12/2020.
 //
 
-#include "../HeaderFiles/BTReceiverDPDK.h"
+#include "BTReceiverDPDK.h"
 
 BTReceiverDPDK::BTReceiverDPDK(const std::string &ipAddr, const int &buffSize) : BTReceiver(ipAddr, buffSize)
 {
