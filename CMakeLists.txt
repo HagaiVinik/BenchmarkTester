@@ -4,7 +4,7 @@ project(BenchmarkTester)
 set(CMAKE_CXX_STANDARD 14)
 
 
-include_directories(BTReceiver/BTReceiverDPDK/HeaderFiles)
+include_directories(BTpcppDPDK/HeaderFiles)
 include_directories(BTReceiver/HeaderFiles)
 include_directories(BTSender/HeaderFiles)
 
@@ -20,12 +20,12 @@ file(GLOB_RECURSE BTRECEIVER_SOURCES BTReceiver/SourceFiles/*.cpp)
 file(GLOB_RECURSE BTSENDER_HEADERS BTSender/HeaderFiles/*.hpp)
 file(GLOB_RECURSE BTSENDER_SOURCES BTSender/SourceFiles/*.cpp)
 
-file(GLOB_RECURSE BTRECEIVER_DPDK_HEADERS BTReceiver/BTReceiverDPDK/HeaderFiles/*.hpp)
-file(GLOB_RECURSE BTRECEIVER_DPDK_SOURCES BTReceiver/BTReceiverDPDK/SourceFiles/*.cpp)
+file(GLOB_RECURSE BTPCPP_DPDK_HEADERS BTpcppDPDK/HeaderFiles/*.hpp)
+file(GLOB_RECURSE BTPCPP_DPDK_SOURCES BTpcppDPDK/SourceFiles/*.cpp)
 
 add_executable(BenchmarkTester main.cpp
-        ${BTRECEIVER_HEADERS}
-        ${BTRECEIVER_SOURCES}
+        ${BTPCPP_DPDK_HEADERS}
+        ${BTPCPP_DPDK_SOURCES}
         ${BTSENDER_HEADERS}
         ${BTSENDER_SOURCES}
         ${BTRECEIVER_DPDK_HEADERS}

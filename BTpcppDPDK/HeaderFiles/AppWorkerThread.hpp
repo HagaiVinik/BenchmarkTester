@@ -38,10 +38,12 @@ private:
     const int _numOfPackets;
     pcpp::Packet* _packetPtr;
     long double _throughput;
+    std::string _ipAddr;
 
 public:
     AppWorkerThread(pcpp::DpdkDevice* device,
                     uint16_t _role,
+                    std::string ipAddr,
                     int buffSize=DEFAULT_CAPACITY,
                     int numOfPackets=DEFAULT_CAPACITY);
 
@@ -58,8 +60,9 @@ public:
     uint32_t getCoreId() const ;
 
     static constexpr auto RECEIVER = 0;
-    static constexpr auto SENDER = 0;
+    static constexpr auto TRANSMITTER = 0;
     static constexpr auto DEFAULT_CAPACITY = 1024;
+    static constexpr auto PORT = 7600;
 
     void craftPacket();
 

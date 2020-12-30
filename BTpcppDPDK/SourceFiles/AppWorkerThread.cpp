@@ -7,10 +7,12 @@
 
 AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
                                  uint16_t role,
+                                 std::string ipAddr,
                                  int buffSize,
                                  int numOfPackets):
         _device(device),
         _role(role),
+        _ipAddr(ipAddr),
         _buffSize(buffSize),
         _numOfPackets(numOfPackets),
         _stop(true),
@@ -57,7 +59,7 @@ bool AppWorkerThread::run(uint32_t coreId)
             }
         }
     }
-    else if(_role == SENDER)
+    else if(_role == TRANSMITTER)
     {
         /** send packets:  */
         while (packetsCounter < _numOfPackets)

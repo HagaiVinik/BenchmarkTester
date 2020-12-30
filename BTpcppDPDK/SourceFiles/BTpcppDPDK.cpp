@@ -5,7 +5,7 @@
 #include "BTpcppDPDK.hpp"
 
 
-BTpcppDPDK::BTpcppDPDK(const int &buffSize, const std::string &ipAddr) : BTReceiver(ipAddr, buffSize) , _device(_device)
+BTpcppDPDK::BTpcppDPDK(const int &buffSize, const std::string &ipAddr)
 {
     /* Intialize DPDK device: */
     bool retVal;
@@ -24,30 +24,30 @@ BTpcppDPDK::BTpcppDPDK(const int &buffSize, const std::string &ipAddr) : BTRecei
 
 int BTpcppDPDK::findDpdkDevices()
 {
+    static constexpr int errorVal = -1;
+    static constexpr int successVal = 0;
+
     std::cout << "trying to find DPDK device....." << std::endl;
-    const int errorVal = -1;
     _device = pcpp::DpdkDeviceList::getInstance().getDeviceByPort(DEVICE_ID_1);
     if (_device == nullptr)
     {
         std::cout << "Cannot find _device with port: " << std::endl << DEVICE_ID_1 << std::endl;
         return errorVal;
     }
-    std::cout << "Device:" << _device->getDeviceName() << " ID:" << _device->getDeviceId() <<
-              " PMD:" << _device->getPMDName() << std::endl;  // " " << _device->
     std::cout << "Done." << std::endl;
+    return successVal;
 }
 
 int BTpcppDPDK::openDpdkDevices()
 {
-    const int errorVal = -1;
+    static constexpr int errorVal = -1;
+    static constexpr int successVal = 0;
     int reVal;
 
     std::cout << "trying to open DPDK devices....." << std::endl;
 
     reVal = _device->openMultiQueues(_device->getTotalNumOfRxQueues(),
                                      _device->getTotalNumOfTxQueues());
-    std::cout << "DeviceQueues: " << _device->getTotalNumOfTxQueues() << std::endl;
-    std::cout << "DeviceQueues: " << _device->getTotalNumOfRxQueues() << std::endl;
     if(!reVal)
     {
         std::cout << "Couldn't open _device " << _device->getDeviceId() << ", PMD "
@@ -61,13 +61,18 @@ int BTpcppDPDK::openDpdkDevices()
         std::cout <<"ERROR: Device is not open! please open device correctly." << std::endl;
     }
     std::cout << "Done." << std::endl;
+    return successVal;
 }
 
 void BTpcppDPDK::setWorker()
 {
     std::cout << "setting Workers....." << std::endl;
 
-    auto* appWorkerThread = new AppWorkerThread(_device, AppWorkerThread::RECEIVER, _buffSize, _numOfPackets);
+    auto* appWorkerThread = new AppWorkerThread(_device,
+                                                AppWorkerThread::RECEIVER,
+                                                _ipAddr,
+                                                _buffSize,
+                                                1024);
     _workers.push_back(appWorkerThread);
 
     std::cout << "Done." << std::endl;
@@ -111,11 +116,6 @@ void BTpcppDPDK::setFilter()
 void BTpcppDPDK::onApplicationInterrupted(void* cookie)
 {
 
-}
-
-std::string BTpcppDPDK::getLocalIPAddress()
-{
-    /** Need to figure out if this really needed, and if it is, how to get it. */
 }
 
 long double BTpcppDPDK::calculateThroughputVal(long timeInMiliSeconds)

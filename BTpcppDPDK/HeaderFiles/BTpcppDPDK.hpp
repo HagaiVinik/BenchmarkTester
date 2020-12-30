@@ -25,6 +25,7 @@ public:
     BTpcppDPDK(const int &buffSize, const std::string &ipAddr);
     ~BTpcppDPDK() = default;
 
+    static constexpr auto PORT = 7600;
     static constexpr auto MBUF_POOL_SIZE = 4095;
     static constexpr auto DEVICE_ID_1 = 0;
     static constexpr auto RECEIVER = 0;
@@ -39,7 +40,9 @@ public:
     void registerToEvent();
 
 private:
-    const auto _ipAddr;
+    std::string _ipAddr;
+    int _buffSize;
+    int _numOfPackets;
     pcpp::DpdkDevice* _device;
     std::vector<pcpp::DpdkWorkerThread*> _workers;
     bool _isRunning = true;
@@ -48,8 +51,6 @@ private:
     long _timeInMilliSeconds = 0;
 
     void setFilter();
-    std::string getLocalIPAddress();
-    void craftPacket();
 
     /* Callback function */
     static void onApplicationInterrupted(void* cookie);

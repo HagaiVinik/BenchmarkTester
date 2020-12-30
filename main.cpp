@@ -3,7 +3,7 @@
 
 #include <SystemUtils.h>
 
-#include "BTReceiverDPDK.hpp"
+#include "BTpcppDPDK.hpp"
 #include "AppWorkerThread.hpp"
 #include "BTReceiver.hpp"
 #include "BTReceiverTCP.hpp"
@@ -145,13 +145,13 @@ int main(int argc, char* argv[])
 {
     std::string myIpAddr = "127.0.0.1";
     int buffSize = 1024;
-    BTReceiverDPDK bt(buffSize, myIpAddr);
+    BTpcppDPDK bt(buffSize, myIpAddr);
     bt.findDpdkDevices();
     bt.openDpdkDevices();
     bt.setWorker();
     bt.startWorkerThreads();
     //bt.startServer();
-    //BTReceiverDPDK *bt = new BTReceiverDPDK(buffSize, myIpAddr);
+    //BTpcppDPDK *bt = new BTpcppDPDK(buffSize, myIpAddr);
     return 0;
 }
 */
@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
 
     _coreMaskToUse = pcpp::getCoreMaskForAllMachineCores();
     std::cout << "_coreMaskToUse: " << _coreMaskToUse << std::endl;
-    retVal = pcpp::DpdkDeviceList::initDpdk(_coreMaskToUse, MBUF_POOL_SIZE, 0);
+    retVal = pcpp::DpdkDeviceList::initDpdk(_coreMaskToUse, 4095, 0);
     if(!retVal)
     {
         std::cout << "ERROR: error in initDpdk(), failed initializing DPDK." << std::endl;
@@ -177,10 +177,10 @@ int main(int argc, char* argv[])
     }
     std::cout << "Done." << std::endl;
     //pcpp::DpdkDeviceList::getInstance().writeDpdkLogToFile(filePtr);
-    _device = pcpp::DpdkDeviceList::getInstance().getDeviceByPort(DEVICE_ID_1);
+    _device = pcpp::DpdkDeviceList::getInstance().getDeviceByPort(0);
     if (_device == nullptr)
     {
-        std::cout << "Cannot find _device with port: " << std::endl << DEVICE_ID_1 << std::endl;
+        std::cout << "Cannot find _device with port: " << std::endl << 0 << std::endl;
         return -1;
     }
     /*
@@ -200,8 +200,8 @@ int main(int argc, char* argv[])
     {
         std::cout <<"ERROR: Device is not open! please open device correctly." << std::endl;
     }
-    AppWorkerThread* appWorkerThread = new AppWorkerThread(_device,1);
-    AppWorkerThread* appWorkerThread2 = new AppWorkerThread(_device,2);
+    AppWorkerThread* appWorkerThread = new AppWorkerThread(_device,1, "127.0.0.1");
+    AppWorkerThread* appWorkerThread2 = new AppWorkerThread(_device,2, "127.0.0.1");
     _workers.push_back(appWorkerThread);
     _workers.push_back(appWorkerThread2);
     retVal = pcpp::DpdkDeviceList::getInstance().startDpdkWorkerThreads(7, _workers);

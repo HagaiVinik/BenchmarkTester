@@ -2,7 +2,7 @@
 cmake-build-debug
 .idea
 build
-BTReceiver/BTReceiverDPDK/HeaderFiles/Common.hpp
+BTpcppDPDK/HeaderFiles/Common.hpp
 
 # Will delete later.
 temp
