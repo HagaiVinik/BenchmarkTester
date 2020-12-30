@@ -1,15 +1,16 @@
-#include <SystemUtils.h>
 #include <getopt.h>
+#include <cstdio>
 
+#include <SystemUtils.h>
 
-#include "../BTReceiverDPDK/HeaderFiles/BTReceiverDPDK.h"
-#include "../BTReceiverDPDK/HeaderFiles/L2FwdWorkerThread.h"
-#include "BTReceiver/HeaderFiles/BTReceiver.hpp"
-#include "BTReceiver/HeaderFiles/BTReceiverTCP.hpp"
-#include "BTReceiver/HeaderFiles/BTReceiverUDP.hpp"
-#include "BTSender/HeaderFiles/BTSender.hpp"
-#include "BTSender/HeaderFiles/BTSenderTCP.hpp"
-#include "BTSender/HeaderFiles/BTSenderUDP.hpp"
+#include "BTReceiverDPDK.hpp"
+#include "AppWorkerThread.hpp"
+#include "BTReceiver.hpp"
+#include "BTReceiverTCP.hpp"
+#include "BTReceiverUDP.hpp"
+#include "BTSender.hpp"
+#include "BTSenderTCP.hpp"
+#include "BTSenderUDP.hpp"
 
 
 const std::string SOFTWARE_VERSION = "1.0";
@@ -139,10 +140,76 @@ int main(int argc, char* argv[])
 }
 */
 
+/*
 int main(int argc, char* argv[])
 {
     std::string myIpAddr = "127.0.0.1";
     int buffSize = 1024;
-    BTReceiverDPDK *bt = new BTReceiverDPDK(myIpAddr, buffSize);
+    BTReceiverDPDK bt(buffSize, myIpAddr);
+    bt.findDpdkDevices();
+    bt.openDpdkDevices();
+    bt.setWorker();
+    bt.startWorkerThreads();
+    //bt.startServer();
+    //BTReceiverDPDK *bt = new BTReceiverDPDK(buffSize, myIpAddr);
     return 0;
+}
+*/
+
+int main(int argc, char* argv[])
+{
+    bool retVal;
+    FILE* filePtr;
+
+    std::vector<pcpp::DpdkWorkerThread*> _workers;
+    pcpp::DpdkDevice* _device;
+    pcpp::CoreMask _coreMaskToUse;
+
+    std::cout << "Main Version" << std::endl;
+
+    _coreMaskToUse = pcpp::getCoreMaskForAllMachineCores();
+    std::cout << "_coreMaskToUse: " << _coreMaskToUse << std::endl;
+    retVal = pcpp::DpdkDeviceList::initDpdk(_coreMaskToUse, MBUF_POOL_SIZE, 0);
+    if(!retVal)
+    {
+        std::cout << "ERROR: error in initDpdk(), failed initializing DPDK." << std::endl;
+        return -1;
+    }
+    std::cout << "Done." << std::endl;
+    //pcpp::DpdkDeviceList::getInstance().writeDpdkLogToFile(filePtr);
+    _device = pcpp::DpdkDeviceList::getInstance().getDeviceByPort(DEVICE_ID_1);
+    if (_device == nullptr)
+    {
+        std::cout << "Cannot find _device with port: " << std::endl << DEVICE_ID_1 << std::endl;
+        return -1;
+    }
+    /*
+    _device->getNumOfOpenedTxQueues();
+    _device->getNumOfOpenedRxQueues();
+    */
+    retVal = _device->openMultiQueues(1,1);
+    if(!retVal)
+    {
+        std::cout <<"Couldn't open _device " << _device->getDeviceId() << ", PMD "
+                  << _device->getPMDName().c_str() << std::endl;
+        return -1;
+    }
+
+    retVal = _device->isOpened();
+    if(!retVal)
+    {
+        std::cout <<"ERROR: Device is not open! please open device correctly." << std::endl;
+    }
+    AppWorkerThread* appWorkerThread = new AppWorkerThread(_device,1);
+    AppWorkerThread* appWorkerThread2 = new AppWorkerThread(_device,2);
+    _workers.push_back(appWorkerThread);
+    _workers.push_back(appWorkerThread2);
+    retVal = pcpp::DpdkDeviceList::getInstance().startDpdkWorkerThreads(7, _workers);
+    if(!retVal)
+    {
+        std::cout << "ERROR handleTraffic(): error in startDpdkWorkerThreads(), couldn't start DPDK workerThreads." << std::endl;
+        return -1;
+    }
+    return 0;
+
 }

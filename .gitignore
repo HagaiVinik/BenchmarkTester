@@ -1,7 +1,8 @@
-/* unnecessary folders */
+# unnecessary folders
 cmake-build-debug
 .idea
 build
+BTReceiver/BTReceiverDPDK/HeaderFiles/Common.hpp
 
 # Will delete later.
 temp

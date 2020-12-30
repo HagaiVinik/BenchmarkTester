@@ -4,7 +4,6 @@ project(BenchmarkTester)
 set(CMAKE_CXX_STANDARD 14)
 
 
-#include_directories(HeaderFiles)
 include_directories(BTReceiver/BTReceiverDPDK/HeaderFiles)
 include_directories(BTReceiver/HeaderFiles)
 include_directories(BTSender/HeaderFiles)
@@ -21,14 +20,20 @@ file(GLOB_RECURSE BTRECEIVER_SOURCES BTReceiver/SourceFiles/*.cpp)
 file(GLOB_RECURSE BTSENDER_HEADERS BTSender/HeaderFiles/*.hpp)
 file(GLOB_RECURSE BTSENDER_SOURCES BTSender/SourceFiles/*.cpp)
 
+file(GLOB_RECURSE BTRECEIVER_DPDK_HEADERS BTReceiver/BTReceiverDPDK/HeaderFiles/*.hpp)
+file(GLOB_RECURSE BTRECEIVER_DPDK_SOURCES BTReceiver/BTReceiverDPDK/SourceFiles/*.cpp)
+
 add_executable(BenchmarkTester main.cpp
         ${BTRECEIVER_HEADERS}
         ${BTRECEIVER_SOURCES}
         ${BTSENDER_HEADERS}
-        ${BTSENDER_SOURCES})
+        ${BTSENDER_SOURCES}
+        ${BTRECEIVER_DPDK_HEADERS}
+        ${BTRECEIVER_DPDK_SOURCES})
 
 
 include_directories(/usr/local/include/pcapplusplus)
+include_directories(/usr/local/include/dpdk)
 include_directories(/home/hagai/Downloads/dpdk-stable-18.11.10/build/include)
 link_directories(/home/hagai/Downloads/dpdk-stable-18.11.10/build/lib)
 
