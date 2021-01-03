@@ -7,7 +7,7 @@
 
 AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
                                  uint16_t role,
-                                 std::string ipAddr,
+                                 const std::string &ipAddr,
                                  int buffSize,
                                  int numOfPackets):
         _device(device),
@@ -16,9 +16,12 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
         _buffSize(buffSize),
         _numOfPackets(numOfPackets),
         _stop(true),
-        _coreId(MAX_NUM_OF_CORES + 1)  //This initialization is like -1 , impossible value.
+        _coreId(MAX_NUM_OF_CORES + 1),  // This initialization is like -1 , impossible value.
+        _throughputVal(-1),                 // Default value for throughput.
+        _throughputType("")
 
 {
+    craftPacket();
 }
 
 bool AppWorkerThread::run(uint32_t coreId)
@@ -37,6 +40,10 @@ bool AppWorkerThread::run(uint32_t coreId)
         while (packetsCounter < _numOfPackets)
         {
             uint16_t packetsReceived = _device->receivePackets(&packetArr, _buffSize, 0);
+            if (packetsCounter == 0 && packetsReceived > 0)
+            {
+                startTime = std::chrono::high_resolution_clock::now();
+            }
             if (packetsReceived > 0)
             {
                 packetsCounter += packetsReceived;
@@ -46,8 +53,7 @@ bool AppWorkerThread::run(uint32_t coreId)
         std::cout << packetsCounter << " All packets Received!." << std::endl;
 
         long timeInMilliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
-        //_throughput = calculateThroughputVal(timeInMilliSeconds);
-        //computeThroughput(throughput);
+        computeThroughput(timeInMilliSeconds);
 
 
         // free packet array (frees all mbufs as well)
@@ -58,6 +64,10 @@ bool AppWorkerThread::run(uint32_t coreId)
                 delete &packetArr[i];
             }
         }
+
+        std::cout << "Throughput is: " << _throughputVal << _throughputType << " per second." << std::endl;
+        /* Send Throughput: */
+        //sendThroughput();
     }
     else if(_role == TRANSMITTER)
     {
@@ -66,6 +76,8 @@ bool AppWorkerThread::run(uint32_t coreId)
         {
             _device->sendPacket(*_packetPtr->getRawPacket());
         }
+        /* receiveThroughput: */
+        //receiveThroughput();
     }
     return true;
 }
@@ -85,10 +97,11 @@ void AppWorkerThread::craftPacket()
     static constexpr auto IP_ID = 2000;
     static constexpr auto TIME_TO_LIVE = 64;
     uint8_t payloadData = 1;
-    pcpp::IPv4Address sourceIPAddress("10.0.0.2");
+    pcpp::IPv4Address sourceIPAddress("10.0.0.2");      //need to make it generic.
     pcpp::IPv4Address destIPAddress(_ipAddr);
     pcpp::MacAddress sourceMACAddress("ff:ff:ff:ff:ff:ff");
     pcpp::MacAddress destMACAddress("ff:ff:ff:ff:ff:ff");
+
 
     /** create a packet with capacity of 100 bytes (will grow automatically if needed) */
     pcpp::Packet newPacket(_buffSize);
@@ -113,4 +126,43 @@ void AppWorkerThread::craftPacket()
 
     /** set packet pointer member class */
     _packetPtr = &newPacket;
+}
+
+long double AppWorkerThread::computeThroughput(long timeInMiliSeconds)
+{
+    long double throughput;
+    double accurate_time = static_cast<double>(timeInMiliSeconds) / 1000.00;
+    throughput = static_cast<double>((_numOfPackets * _buffSize)) / accurate_time;
+
+    double result = 0.0;
+    if (throughput >= GB_SIZE)
+    {
+        result = throughput / GB_SIZE;
+        _throughputType = "GB";
+    }
+    else if (throughput >= MB_SIZE)
+    {
+        result = throughput / MB_SIZE;
+        _throughputType = "MB";
+    }
+    else if(throughput >= KB_SIZE)
+    {
+        result = throughput / KB_SIZE;
+        _throughputType = "KB";
+    }
+    _throughputVal = result;
+}
+
+
+/* Unnecessary currently */
+
+void AppWorkerThread::sendThroughput()
+{
+    /* Build throughput packet: */
+
+}
+
+void AppWorkerThread::receiveThroughput()
+{
+    /* Parse throughput packet  */
 }

@@ -4,8 +4,7 @@
 
 #include "BTpcppDPDK.hpp"
 
-
-BTpcppDPDK::BTpcppDPDK(const int &buffSize, const std::string &ipAddr)
+void BTpcppDPDK::initializeDpdk()
 {
     /* Intialize DPDK device: */
     bool retVal;
@@ -16,11 +15,17 @@ BTpcppDPDK::BTpcppDPDK(const int &buffSize, const std::string &ipAddr)
     retVal = pcpp::DpdkDeviceList::initDpdk(_coreMaskToUse, MBUF_POOL_SIZE);
     if(!retVal)
     {
-        std::cout << "ERROR: error in initDpdk(), failed initializing DPDK." << std::endl;
+        throw std::runtime_error("ERROR: error in initDpdk(), failed initializing DPDK.");
     }
 
     std::cout << "Done." << std::endl;
 }
+
+BTpcppDPDK::BTpcppDPDK(const int buffSize, const std::string &ipAddr, const int role) :
+                        _buffSize(buffSize),
+                        _ipAddr(ipAddr),
+                        _role(role)
+{}
 
 int BTpcppDPDK::findDpdkDevices()
 {
@@ -31,8 +36,7 @@ int BTpcppDPDK::findDpdkDevices()
     _device = pcpp::DpdkDeviceList::getInstance().getDeviceByPort(DEVICE_ID_1);
     if (_device == nullptr)
     {
-        std::cout << "Cannot find _device with port: " << std::endl << DEVICE_ID_1 << std::endl;
-        return errorVal;
+        throw std::runtime_error("Cannot find _device with port: 0 ");
     }
     std::cout << "Done." << std::endl;
     return successVal;
@@ -52,13 +56,13 @@ int BTpcppDPDK::openDpdkDevices()
     {
         std::cout << "Couldn't open _device " << _device->getDeviceId() << ", PMD "
                   << _device->getPMDName().c_str() << std::endl;
-        return errorVal;
+        throw std::runtime_error( "ERROR: error in openDpdkDevices(), Couldn't open _device ");
     }
 
     reVal = _device->isOpened();
     if(!reVal)
     {
-        std::cout <<"ERROR: Device is not open! please open device correctly." << std::endl;
+        throw std::runtime_error( "ERROR: error in openDpdkDevices(), Device is not opened. ");
     }
     std::cout << "Done." << std::endl;
     return successVal;
@@ -69,10 +73,10 @@ void BTpcppDPDK::setWorker()
     std::cout << "setting Workers....." << std::endl;
 
     auto* appWorkerThread = new AppWorkerThread(_device,
-                                                AppWorkerThread::RECEIVER,
+                                                _role,
                                                 _ipAddr,
                                                 _buffSize,
-                                                1024);
+                                                _numOfPackets);
     _workers.push_back(appWorkerThread);
 
     std::cout << "Done." << std::endl;
@@ -89,14 +93,6 @@ void BTpcppDPDK::startWorkerThreads()
     {
         std::cout << "ERROR handleTraffic(): error in startDpdkWorkerThreads(), couldn't start DPDK workerThreads." << std::endl;
     }
-}
-
-void BTpcppDPDK::startServer()
-{
-    findDpdkDevices();
-    openDpdkDevices();
-    setFilter();
-    setWorker();
 }
 
 void BTpcppDPDK::registerToEvent()
@@ -118,10 +114,32 @@ void BTpcppDPDK::onApplicationInterrupted(void* cookie)
 
 }
 
-long double BTpcppDPDK::calculateThroughputVal(long timeInMiliSeconds)
+void BTpcppDPDK::startServer()
 {
-    long double throughputVal;
-    double accurate_time = static_cast<double>(timeInMiliSeconds) / 1000.00;
-    throughputVal = static_cast<double>((_numOfPackets * _buffSize)) / accurate_time;
-    return throughputVal;
+    try
+    {
+        initializeDpdk();
+        findDpdkDevices();
+        openDpdkDevices();
+        setFilter();
+    }
+    catch (const std::runtime_error &ex)
+    {
+        std::cout << ex.what() << std::endl;
+        return;
+    }
+
+    setWorker();    //setting arguments for worker thread.
+
+    /* More likely to fail: */
+    try
+    {
+        startWorkerThreads();
+    }
+    catch (const std::runtime_error &ex)
+    {
+        std::cout <<  ex.what() << std::endl;
+    }
+
+
 }

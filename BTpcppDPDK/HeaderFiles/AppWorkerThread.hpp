@@ -37,34 +37,43 @@ private:
     const int _buffSize;
     const int _numOfPackets;
     pcpp::Packet* _packetPtr;
-    long double _throughput;
     std::string _ipAddr;
+
+    long double _throughputVal;
+    std::string _throughputType;
 
 public:
     AppWorkerThread(pcpp::DpdkDevice* device,
                     uint16_t _role,
-                    std::string ipAddr,
+                    const std::string &ipAddr,
                     int buffSize=DEFAULT_CAPACITY,
                     int numOfPackets=DEFAULT_CAPACITY);
 
-    ~AppWorkerThread() { /*Do nothing*/ }
+    ~AppWorkerThread() override = default;
 
     // implement abstract method
     // start running the worker thread
-    bool run(uint32_t coreId) ;
+    bool run(uint32_t coreId) override ;
 
     // ask the worker thread to stop
-    void stop () ;
+    void stop () override ;
 
     // get worker thread core ID
-    uint32_t getCoreId() const ;
+    uint32_t getCoreId() const override ;
 
-    static constexpr auto RECEIVER = 0;
-    static constexpr auto TRANSMITTER = 0;
+    static constexpr auto RECEIVER = 1;
+    static constexpr auto TRANSMITTER = 2;
     static constexpr auto DEFAULT_CAPACITY = 1024;
     static constexpr auto PORT = 7600;
+    static constexpr auto KB_SIZE = 1024.0;
+    static constexpr auto MB_SIZE = KB_SIZE * 1024.0;
+    static constexpr auto GB_SIZE = MB_SIZE * 1024.0;
 
     void craftPacket();
+    long double computeThroughput(long timeInMiliSeconds);
+    void sendThroughput();
+    void receiveThroughput();
+
 
 };
 

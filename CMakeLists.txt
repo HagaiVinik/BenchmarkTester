@@ -24,12 +24,12 @@ file(GLOB_RECURSE BTPCPP_DPDK_HEADERS BTpcppDPDK/HeaderFiles/*.hpp)
 file(GLOB_RECURSE BTPCPP_DPDK_SOURCES BTpcppDPDK/SourceFiles/*.cpp)
 
 add_executable(BenchmarkTester main.cpp
-        ${BTPCPP_DPDK_HEADERS}
-        ${BTPCPP_DPDK_SOURCES}
+        ${BTRECEIVER_HEADERS}
+        ${BTRECEIVER_SOURCES}
         ${BTSENDER_HEADERS}
         ${BTSENDER_SOURCES}
-        ${BTRECEIVER_DPDK_HEADERS}
-        ${BTRECEIVER_DPDK_SOURCES})
+        ${BTPCPP_DPDK_HEADERS}
+        ${BTPCPP_DPDK_SOURCES})
 
 
 include_directories(/usr/local/include/pcapplusplus)

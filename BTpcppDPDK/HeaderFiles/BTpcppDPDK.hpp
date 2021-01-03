@@ -22,15 +22,16 @@
 
 class BTpcppDPDK {
 public:
-    BTpcppDPDK(const int &buffSize, const std::string &ipAddr);
+    BTpcppDPDK(const int buffSize, const std::string &ipAddr, const int role);
     ~BTpcppDPDK() = default;
 
     static constexpr auto PORT = 7600;
     static constexpr auto MBUF_POOL_SIZE = 4095;
     static constexpr auto DEVICE_ID_1 = 0;
-    static constexpr auto RECEIVER = 0;
-    static constexpr auto TRANSMITTER = 1;
+    static constexpr auto RECEIVER = 1;
+    static constexpr auto TRANSMITTER = 2;
 
+    void initializeDpdk();
     void startServer();
     int findDpdkDevices();
     int openDpdkDevices();
@@ -40,6 +41,7 @@ public:
     void registerToEvent();
 
 private:
+    int _role;
     std::string _ipAddr;
     int _buffSize;
     int _numOfPackets;
