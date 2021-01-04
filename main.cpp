@@ -44,6 +44,7 @@ void printUsage()
            "    -c client        : starts program as a client side\n"
            "    -s server        : starts program as a server side\n"
            "    -i IP            : IP address of the specified target\n"
+           "    -l Loopback      : local IP address of the machine\n"
            "    -b _buffSize     : sets size of the _buffer\n"
            "    -p _numOfPackets : sets number of packets to measure\n"
            "    -u UDP           : use UDP protocol instead of TCP\n"
@@ -56,7 +57,7 @@ void printUsage()
 int main(int argc, char* argv[])
 {
     /* Default values. */
-    std::string BTIpAddr = "127.0.0.1";
+    std::string BTIpAddr = "0.0.0.0";
     int buffSize = 1024;
     int numOfPackets = 1024;
     std::string BTInstance = "";
@@ -67,7 +68,7 @@ int main(int argc, char* argv[])
 
     int optionIndex = 0;
     char opt = 0;
-    while((opt = getopt_long(argc, argv, "csuhvp:b:", BTOptions, &optionIndex)) != -1)
+    while((opt = getopt_long(argc, argv, "csuhvli:p:b:", BTOptions, &optionIndex)) != -1)
     {
         switch (opt)
         {
@@ -99,6 +100,9 @@ int main(int argc, char* argv[])
                 break;
             case 'u':
                 BTType = "UDP";
+                break;
+            case 'l':
+                BTIpAddr = "127.0.0.1";
                 break;
             case 'i':
                 BTIpAddr = optarg;
@@ -165,77 +169,3 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-
-/*
-int main(int argc, char* argv[])
-{
-    std::string myIpAddr = "127.0.0.1";
-    int buffSize = 1024;
-    BTpcppDPDK bt(buffSize, myIpAddr);
-    bt.findDpdkDevices();
-    bt.openDpdkDevices();
-    bt.setWorker();
-    bt.startWorkerThreads();
-    //bt.startServer();
-    //BTpcppDPDK *bt = new BTpcppDPDK(buffSize, myIpAddr);
-    return 0;
-}
-*/
-
-
-int main3(int argc, char* argv[])
-{
-    bool retVal;
-
-    std::vector<pcpp::DpdkWorkerThread*> _workers;
-    pcpp::DpdkDevice* _device;
-    pcpp::CoreMask _coreMaskToUse;
-
-    std::cout << "Main Version" << std::endl;
-
-    _coreMaskToUse = pcpp::getCoreMaskForAllMachineCores();
-    std::cout << "_coreMaskToUse: " << _coreMaskToUse << std::endl;
-    retVal = pcpp::DpdkDeviceList::initDpdk(_coreMaskToUse, 4095, 0);
-    if(!retVal)
-    {
-        std::cout << "ERROR: error in initDpdk(), failed initializing DPDK." << std::endl;
-        return -1;
-    }
-    std::cout << "Done." << std::endl;
-    //pcpp::DpdkDeviceList::getInstance().writeDpdkLogToFile(filePtr);
-    _device = pcpp::DpdkDeviceList::getInstance().getDeviceByPort(0);
-    if (_device == nullptr)
-    {
-        std::cout << "Cannot find _device with port: " << std::endl << 0 << std::endl;
-        return -1;
-    }
-    /*
-    _device->getNumOfOpenedTxQueues();
-    _device->getNumOfOpenedRxQueues();
-    */
-    retVal = _device->openMultiQueues(1,1);
-    if(!retVal)
-    {
-        std::cout <<"Couldn't open _device " << _device->getDeviceId() << ", PMD "
-                  << _device->getPMDName().c_str() << std::endl;
-        return -1;
-    }
-
-    retVal = _device->isOpened();
-    if(!retVal)
-    {
-        std::cout <<"ERROR: Device is not open! please open device correctly." << std::endl;
-    }
-    AppWorkerThread* appWorkerThread = new AppWorkerThread(_device,1, "127.0.0.1");
-    AppWorkerThread* appWorkerThread2 = new AppWorkerThread(_device,2, "127.0.0.1");
-    _workers.push_back(appWorkerThread);
-    _workers.push_back(appWorkerThread2);
-    retVal = pcpp::DpdkDeviceList::getInstance().startDpdkWorkerThreads(7, _workers);
-    if(!retVal)
-    {
-        std::cout << "ERROR handleTraffic(): error in startDpdkWorkerThreads(), couldn't start DPDK workerThreads." << std::endl;
-        return -1;
-    }
-    return 0;
-
-}
