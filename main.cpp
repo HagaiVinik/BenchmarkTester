@@ -1,16 +1,19 @@
-#include <SystemUtils.h>
 #include <getopt.h>
+#include <cstdio>
+
+#include <SystemUtils.h>
+
+#include "BTpcppDPDK.hpp"
+#include "AppWorkerThread.hpp"
+#include "BTReceiver.hpp"
+#include "BTReceiverTCP.hpp"
+#include "BTReceiverUDP.hpp"
+#include "BTSender.hpp"
+#include "BTSenderTCP.hpp"
+#include "BTSenderUDP.hpp"
 
 
-#include "BTReceiver/HeaderFiles/BTReceiver.hpp"
-#include "BTReceiver/HeaderFiles/BTReceiverTCP.hpp"
-#include "BTReceiver/HeaderFiles/BTReceiverUDP.hpp"
-#include "BTSender/HeaderFiles/BTSender.hpp"
-#include "BTSender/HeaderFiles/BTSenderTCP.hpp"
-#include "BTSender/HeaderFiles/BTSenderUDP.hpp"
-
-
-const std::string SOFTWARE_VERSION = "1.0";
+const std::string SOFTWARE_VERSION = "2.0";
 
 
 static struct option BTOptions[] =
@@ -35,33 +38,37 @@ void printUsage()
     std::cout <<"\nUsage:\n"
            "-------\n"
            "copyright ©2020 BenchmarkTester, all rights reserved.\n"
-           "BenchmarkTester [-h] [-v] [-o output_file] [-c packet_count] [-i filter] [-s]\n"
+           "BenchmarkTester [-h] [-v] [-s server-side] [-c client-side] [-i ip Address] \n"
+           "                 [-u UDP] [-d dpdk ] \n"
            "\nOptions:\n\n"
-           "    -c client       : starts program as a client side\n"
-           "    -s server       : starts program as a server side\n"
+           "    -c client        : starts program as a client side\n"
+           "    -s server        : starts program as a server side\n"
+           "    -i IP            : IP address of the specified target\n"
+           "    -l Loopback      : local IP address of the machine\n"
            "    -b _buffSize     : sets size of the _buffer\n"
            "    -p _numOfPackets : sets number of packets to measure\n"
-           "    -u UDP          : use UDP protocol instead of TCP\n"
-           "    -d dpdk         : Use DPDK technology\n"
-           "    -v version      : Display the current version and exit\n"
-           "    -h help         : Display this help message and exit\n\n";
+           "    -u UDP           : use UDP protocol instead of TCP\n"
+           "    -d dpdk          : Use DPDK technology\n"
+           "    -v version       : Display the current version and exit\n"
+           "    -h help          : Display this help message and exit\n\n";
 }
 
 
 int main(int argc, char* argv[])
 {
     /* Default values. */
-    std::string myIpAddr = "127.0.0.1";
+    std::string BTIpAddr = "0.0.0.0";
     int buffSize = 1024;
     int numOfPackets = 1024;
     std::string BTInstance = "";
     std::string BTType = "TCP";
     std::string filter = "";
+    bool useDpdk = false;
 
 
     int optionIndex = 0;
     char opt = 0;
-    while((opt = getopt_long(argc, argv, "csuhvp:b:", BTOptions, &optionIndex)) != -1)
+    while((opt = getopt_long(argc, argv, "csuhvli:p:b:", BTOptions, &optionIndex)) != -1)
     {
         switch (opt)
         {
@@ -94,6 +101,15 @@ int main(int argc, char* argv[])
             case 'u':
                 BTType = "UDP";
                 break;
+            case 'l':
+                BTIpAddr = "127.0.0.1";
+                break;
+            case 'i':
+                BTIpAddr = optarg;
+                break;
+            case 'd':
+                useDpdk = true;
+                break;
             case 'v':
                 printVersion();
                 return 0;
@@ -106,30 +122,47 @@ int main(int argc, char* argv[])
                 return -1;
         }
     }
-    if(BTInstance == "server")
+
+    if(!useDpdk)
     {
-        if (BTType == "UDP")
+        if(BTInstance == "server")
         {
-            BTReceiverUDP bt(buffSize, myIpAddr);
-            bt.startServer();
+            if (BTType == "UDP")
+            {
+                BTReceiverUDP bt(buffSize, BTIpAddr);
+                bt.startServer();
+            }
+            else
+            {
+                BTReceiverTCP bt(buffSize, BTIpAddr);
+                bt.startServer();
+            }
         }
-        else
+        else if(BTInstance == "client")
         {
-            BTReceiverTCP bt(buffSize, myIpAddr);
-            bt.startServer();
+            if(BTType == "UDP")
+            {
+                BTSenderUDP bt(buffSize, BTIpAddr, numOfPackets);
+                bt.startClient();
+            }
+            else
+            {
+                BTSenderTCP bt(buffSize, BTIpAddr, numOfPackets);
+                bt.startClient();
+            }
         }
     }
-    else if(BTInstance == "client")
+    else
     {
-        if(BTType == "UDP")
+        if(BTInstance == "server")
         {
-            BTSenderUDP bt(buffSize, myIpAddr, numOfPackets);
-            bt.startClient();
+            BTpcppDPDK bt(buffSize,BTIpAddr, BTpcppDPDK::RECEIVER);
+            bt.startServer();
         }
-        else
+        else if(BTInstance == "client")
         {
-            BTSenderTCP bt(buffSize, myIpAddr, numOfPackets);
-            bt.startClient();
+            BTpcppDPDK bt(buffSize,BTIpAddr, BTpcppDPDK::TRANSMITTER);
+            bt.startServer();
         }
     }
 
