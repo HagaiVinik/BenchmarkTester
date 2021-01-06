@@ -14,10 +14,10 @@
 #include <arpa/inet.h>
 
 
-class BTSender {
+class BTSender
+{
 public:
-    BTSender(const std::string &ipAddr, const int &buffSize, const int &numOfPackets);
-    ~BTSender()= default;
+    BTSender(const std::string &ipAddr, int buffSize, int numOfPackets);
     void printResponse(const std::string &throughput);
 
 protected:

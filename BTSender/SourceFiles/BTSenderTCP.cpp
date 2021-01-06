@@ -5,8 +5,8 @@
 #include "BTSenderTCP.hpp"
 
 
-BTSenderTCP::BTSenderTCP(const int &buffSize, const std::string &ipAddr,
-                         const int &numOfPackets) : BTSender(ipAddr, buffSize, numOfPackets)
+BTSenderTCP::BTSenderTCP(int buffSize, const std::string &ipAddr, int numOfPackets) :
+                            BTSender(ipAddr, buffSize, numOfPackets)
 {
 }
 

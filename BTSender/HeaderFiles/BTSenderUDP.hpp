@@ -8,19 +8,15 @@
 #include "BTSender.hpp"
 
 
-class BTSenderUDP : BTSender {
+class BTSenderUDP : BTSender
+{
 public:
-    BTSenderUDP(const int &buffSize, const std::string &ipAddr, const int &numOfPackets);
-    ~BTSenderUDP() = default;
+    BTSenderUDP(int buffSize, const std::string &ipAddr, int numOfPackets);
 
     void startClient();
 
 private:
     unsigned int _serverAddrLen;
-
-    /* Hagai:
-     * Note: remember to fix _buffer an buff size. (size is determind by the client).
-     * */
 
     void createSocket();
     void sendNumOfPackets();

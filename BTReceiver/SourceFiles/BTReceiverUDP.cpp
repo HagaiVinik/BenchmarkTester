@@ -5,7 +5,7 @@
 #include "BTReceiverUDP.hpp"
 
 
-BTReceiverUDP::BTReceiverUDP(const int &buffSize, const std::string &ipAddr) : BTReceiver(ipAddr, buffSize)
+BTReceiverUDP::BTReceiverUDP(int buffSize, const std::string &ipAddr) : BTReceiver(ipAddr, buffSize)
 {
 }
 
@@ -135,7 +135,7 @@ void BTReceiverUDP::handleTraffic()
     sendThroughput(successInPercents, numOfPacketsLost);
 }
 
-void BTReceiverUDP::sendThroughput(const double &successInPercents, const int &numOfPacketsLost)
+void BTReceiverUDP::sendThroughput(double successInPercents, int numOfPacketsLost)
 {
     std::string strThroughputVal = std::to_string(_throughputVal);
     std::string strSuccessInPercents = std::to_string(successInPercents);
@@ -151,7 +151,7 @@ void BTReceiverUDP::sendThroughput(const double &successInPercents, const int &n
     std::cout << "Sent to client." << std::endl;
 }
 
-void BTReceiverUDP::startServer(const int maxConnectionRequests)
+void BTReceiverUDP::startServer(int maxConnectionRequests)
 {
     static constexpr int failedVal = -1;
     int retVal;

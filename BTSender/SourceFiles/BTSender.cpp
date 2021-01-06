@@ -4,7 +4,7 @@
 
 #include "BTSender.hpp"
 
-BTSender::BTSender(const std::string &ipAddr, const int &buffSize, const int &numOfPackets)
+BTSender::BTSender(const std::string &ipAddr, int buffSize, int numOfPackets)
 : _ipAddr(ipAddr), _buffSize(buffSize), _numOfPackets(numOfPackets)
 {
     _buffer.resize(_buffSize, 0);

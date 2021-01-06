@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 
     int optionIndex = 0;
     char opt = 0;
-    while((opt = getopt_long(argc, argv, "csuhvli:p:b:", BTOptions, &optionIndex)) != -1)
+    while((opt = getopt_long(argc, argv, "csuhvdli:p:b:", BTOptions, &optionIndex)) != -1)
     {
         switch (opt)
         {

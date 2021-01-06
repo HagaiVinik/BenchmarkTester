@@ -8,13 +8,6 @@ include_directories(BTpcppDPDK/HeaderFiles)
 include_directories(BTReceiver/HeaderFiles)
 include_directories(BTSender/HeaderFiles)
 
-# Will add this later:
-#       BTReceiver/temp/BTServer.h
-#        BTReceiver/temp/BTServer.cpp
-#        BTReceiver/temp/PacketStats.h
-#        BTReceiver/temp/PacketStats.cpp
-
-
 file(GLOB_RECURSE BTRECEIVER_HEADERS BTReceiver/HeaderFiles/*.hpp)
 file(GLOB_RECURSE BTRECEIVER_SOURCES BTReceiver/SourceFiles/*.cpp)
 file(GLOB_RECURSE BTSENDER_HEADERS BTSender/HeaderFiles/*.hpp)

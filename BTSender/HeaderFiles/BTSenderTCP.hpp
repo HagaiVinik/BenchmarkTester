@@ -8,17 +8,13 @@
 #include "BTSender.hpp"
 
 
-class BTSenderTCP : BTSender {
+class BTSenderTCP : BTSender
+{
 public:
-    BTSenderTCP(const int &buffSize, const std::string &ipAddr, const int &numOfPackets);
-    ~BTSenderTCP() = default;
-
+    BTSenderTCP(int buffSize, const std::string &ipAddr, int numOfPackets);
     void startClient();
 
 private:
-    /* Hagai:
-     * Note: remember to fix _buffer an buff size. (size is determind by the client).
-     * */
     void sendNumOfPackets();
     void createSocket();
     void connectSocket();

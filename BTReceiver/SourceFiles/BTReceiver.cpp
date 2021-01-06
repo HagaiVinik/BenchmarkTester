@@ -4,22 +4,19 @@
 
 #include "BTReceiver.hpp"
 
-BTReceiver::BTReceiver(const std::string &ipAddr, const int &buffSize)
-:   _throughputVal(0.0),
-    _throughputType(""),
-    _opt(1),
-    _buffSize(buffSize),
+BTReceiver::BTReceiver(const std::string &ipAddr, int buffSize)
+:   _buffSize(buffSize),
     _ipAddr(ipAddr)
 {
     _buffer.resize(_buffSize, 0);
 }
 
-void BTReceiver::setNumOfPackets(const int &numOfPackets)
+void BTReceiver::setNumOfPackets(int numOfPackets)
 {
     _numOfPackets = numOfPackets;
 }
 
-void BTReceiver::computeThroughput(const long double &throughput)
+void BTReceiver::computeThroughput(long double throughput)
 {
     double result = 0.0;
     if (throughput >= GB_SIZE)
@@ -39,6 +36,3 @@ void BTReceiver::computeThroughput(const long double &throughput)
     }
     _throughputVal = result;
 }
-
-
-

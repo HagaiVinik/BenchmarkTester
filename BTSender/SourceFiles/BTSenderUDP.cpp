@@ -4,7 +4,7 @@
 
 #include "BTSenderUDP.hpp"
 
-BTSenderUDP::BTSenderUDP(const int &buffSize, const std::string &ipAddr, const int &numOfPackets) :
+BTSenderUDP::BTSenderUDP(int buffSize, const std::string &ipAddr, int numOfPackets) :
                          BTSender(ipAddr, buffSize, numOfPackets) ,
                          _serverAddrLen(sizeof(_serverAddr))
 {
@@ -13,7 +13,8 @@ BTSenderUDP::BTSenderUDP(const int &buffSize, const std::string &ipAddr, const i
 void BTSenderUDP::createSocket()
 {
     static constexpr int failedVal = 0;
-    if ((_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+    if ((_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0 )
+    {
         throw std::runtime_error("ERROR: error in createSocket(), socket() failed");
     }
 
@@ -22,9 +23,13 @@ void BTSenderUDP::createSocket()
     _serverAddr.sin_family = AF_INET;
     _serverAddr.sin_port = htons(PORT);
     if(_ipAddr == "0.0.0.0")
+    {
         _serverAddr.sin_addr.s_addr = INADDR_ANY;
+    }
     else if(_ipAddr == "127.0.0.1")
+    {
         _serverAddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    }
     _serverAddr.sin_addr.s_addr = INADDR_ANY;
 }
 
@@ -100,9 +105,12 @@ int BTSenderUDP::receiveThroughputResponse()
 
 void BTSenderUDP::startClient()
 {
-    try{
+    try
+    {
         createSocket();
-    } catch (const std::runtime_error &ex) {
+    }
+    catch (const std::runtime_error &ex)
+    {
         std::cout << ex.what() << std::endl;
         return;
     }
