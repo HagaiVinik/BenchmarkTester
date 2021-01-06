@@ -8,9 +8,9 @@
 #include "BTReceiver.hpp"
 #include "BTReceiverTCP.hpp"
 #include "BTReceiverUDP.hpp"
-#include "BTSender.hpp"
-#include "BTSenderTCP.hpp"
-#include "BTSenderUDP.hpp"
+#include "BTTransmitter.hpp"
+#include "BTTransmitterTCP.hpp"
+#include "BTTransmitterUDP.hpp"
 
 
 const std::string SOFTWARE_VERSION = "2.0";
@@ -142,12 +142,12 @@ int main(int argc, char* argv[])
         {
             if(BTType == "UDP")
             {
-                BTSenderUDP bt(buffSize, BTIpAddr, numOfPackets);
+                BTTransmitterUDP bt(buffSize, BTIpAddr, numOfPackets);
                 bt.startClient();
             }
             else
             {
-                BTSenderTCP bt(buffSize, BTIpAddr, numOfPackets);
+                BTTransmitterTCP bt(buffSize, BTIpAddr, numOfPackets);
                 bt.startClient();
             }
         }

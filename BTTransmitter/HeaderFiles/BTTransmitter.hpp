@@ -2,8 +2,8 @@
 // Created by hagai on 22/11/2020.
 //
 
-#ifndef BENCHMARKTESTER_BTSENDER_HPP
-#define BENCHMARKTESTER_BTSENDER_HPP
+#ifndef BENCHMARKTESTER_BTTRANSMITTER_HPP
+#define BENCHMARKTESTER_BTTRANSMITTER_HPP
 
 #include <iostream>
 #include <cstring>
@@ -14,10 +14,10 @@
 #include <arpa/inet.h>
 
 
-class BTSender
+class BTTransmitter
 {
 public:
-    BTSender(const std::string &ipAddr, int buffSize, int numOfPackets);
+    BTTransmitter(const std::string &ipAddr, int buffSize, int numOfPackets);
     void printResponse(const std::string &throughput);
 
 protected:
@@ -32,5 +32,5 @@ protected:
     std::string _ipAddr;
 };
 
-#endif //BENCHMARKTESTER_BTSENDER_HPP
+#endif //BENCHMARKTESTER_BTTRANSMITTER_HPP
 

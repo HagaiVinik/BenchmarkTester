@@ -2,15 +2,15 @@
 // Created by hagai on 22/11/2020.
 //
 
-#include "BTSenderTCP.hpp"
+#include "BTTransmitterTCP.hpp"
 
 
-BTSenderTCP::BTSenderTCP(int buffSize, const std::string &ipAddr, int numOfPackets) :
-                            BTSender(ipAddr, buffSize, numOfPackets)
+BTTransmitterTCP::BTTransmitterTCP(int buffSize, const std::string &ipAddr, int numOfPackets) :
+        BTTransmitter(ipAddr, buffSize, numOfPackets)
 {
 }
 
-void BTSenderTCP::createSocket()
+void BTTransmitterTCP::createSocket()
 {
     static constexpr int failedVal = 0;   //retVal of socket()
     if ((_sock = socket(AF_INET, SOCK_STREAM, 0)) < failedVal)
@@ -27,7 +27,7 @@ void BTSenderTCP::createSocket()
     }
 }
 
-void BTSenderTCP::connectSocket()
+void BTTransmitterTCP::connectSocket()
 {
     if (connect(_sock, (struct sockaddr *)&_serverAddr, sizeof(_serverAddr)) < 0)
     {
@@ -36,7 +36,7 @@ void BTSenderTCP::connectSocket()
     std::cout << "Connected to server." << std::endl;
 }
 
-void BTSenderTCP::sendNumOfPackets()
+void BTTransmitterTCP::sendNumOfPackets()
 {
     static constexpr int flag = 0;
     std::string strNumOfPackets = std::to_string(_numOfPackets);
@@ -47,7 +47,7 @@ void BTSenderTCP::sendNumOfPackets()
         throw std::runtime_error("ERROR: error in sendNumOfPackets(), send() failed.");
 }
 
-int BTSenderTCP::receiveOkResponse()
+int BTTransmitterTCP::receiveOkResponse()
 {
     static constexpr int flag = 0;
     static constexpr int successVal = 0;
@@ -71,7 +71,7 @@ int BTSenderTCP::receiveOkResponse()
     return errorVal;
 }
 
-int BTSenderTCP::sendTraffic()
+int BTTransmitterTCP::sendTraffic()
 {
     std::cout << "Sending traffic....." << std::endl;
     static constexpr int flag = 0;
@@ -89,7 +89,7 @@ int BTSenderTCP::sendTraffic()
     return successVal;
 }
 
-int BTSenderTCP::receiveThroughputResponse()
+int BTTransmitterTCP::receiveThroughputResponse()
 {
     static constexpr int flag = 0;
     _valRead = recv(_sock, (char *)_buffer.c_str(), _buffer.length(), flag);
@@ -98,7 +98,7 @@ int BTSenderTCP::receiveThroughputResponse()
     return _valRead;
 }
 
-void BTSenderTCP::startClient()
+void BTTransmitterTCP::startClient()
 {
     static constexpr int successVal = 0;
     static constexpr int errorVal = -1;

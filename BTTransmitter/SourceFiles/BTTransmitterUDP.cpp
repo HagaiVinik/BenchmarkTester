@@ -2,15 +2,15 @@
 // Created by hagai on 24/11/2020.
 //
 
-#include "BTSenderUDP.hpp"
+#include "BTTransmitterUDP.hpp"
 
-BTSenderUDP::BTSenderUDP(int buffSize, const std::string &ipAddr, int numOfPackets) :
-                         BTSender(ipAddr, buffSize, numOfPackets) ,
-                         _serverAddrLen(sizeof(_serverAddr))
+BTTransmitterUDP::BTTransmitterUDP(int buffSize, const std::string &ipAddr, int numOfPackets) :
+        BTTransmitter(ipAddr, buffSize, numOfPackets) ,
+        _serverAddrLen(sizeof(_serverAddr))
 {
 }
 
-void BTSenderUDP::createSocket()
+void BTTransmitterUDP::createSocket()
 {
     static constexpr int failedVal = 0;
     if ((_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0 )
@@ -33,7 +33,7 @@ void BTSenderUDP::createSocket()
     _serverAddr.sin_addr.s_addr = INADDR_ANY;
 }
 
-void BTSenderUDP::sendNumOfPackets()
+void BTTransmitterUDP::sendNumOfPackets()
 {
     static constexpr int flag = 0;
     std::string strNumOfPackets = std::to_string(_numOfPackets);
@@ -45,7 +45,7 @@ void BTSenderUDP::sendNumOfPackets()
                         sizeof(_serverAddr));
 }
 
-int BTSenderUDP::receiveOkResponse()
+int BTTransmitterUDP::receiveOkResponse()
 {
     static constexpr int flag = 0;
     static constexpr int successVal = 0;
@@ -74,7 +74,7 @@ int BTSenderUDP::receiveOkResponse()
     return errorVal;
 }
 
-int BTSenderUDP::sendTraffic()
+int BTTransmitterUDP::sendTraffic()
 {
     std::cout << "Sending traffic....." << std::endl;
     static constexpr int flag = 0;
@@ -88,7 +88,7 @@ int BTSenderUDP::sendTraffic()
     return 0;
 }
 
-int BTSenderUDP::receiveThroughputResponse()
+int BTTransmitterUDP::receiveThroughputResponse()
 {
     static constexpr int flag = 0;
     static constexpr int successVal = 0;
@@ -103,7 +103,7 @@ int BTSenderUDP::receiveThroughputResponse()
     return _valRead;
 }
 
-void BTSenderUDP::startClient()
+void BTTransmitterUDP::startClient()
 {
     try
     {
