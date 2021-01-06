@@ -70,7 +70,7 @@ public:
     static constexpr auto GB_SIZE = MB_SIZE * 1024.0;
 
     void craftPacket();
-    long double computeThroughput(long timeInMiliSeconds);
+    void computeThroughput(long timeInMiliSeconds);
     void sendThroughput();
     void receiveThroughput();
 

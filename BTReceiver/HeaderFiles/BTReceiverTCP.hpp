@@ -9,10 +9,10 @@
 #include "BTReceiver.hpp"
 
 
-class BTReceiverTCP : public BTReceiver {
+class BTReceiverTCP : public BTReceiver
+{
 public:
-    BTReceiverTCP(const int &buffSize, const std::string &ipAddr);
-    ~BTReceiverTCP() = default;
+    BTReceiverTCP(int buffSize, const std::string &ipAddr);
     void startServer(const int &maxConnectionRequests=1);
 
 private:
@@ -20,9 +20,10 @@ private:
     sockaddr_in _address;
 
     const int ADDR_LEN = sizeof(_address);
+
     void createSocket();
     void bindSocket();
-    void listenForConnection(const int maxConnectionRequests=1);
+    void listenForConnection(int maxConnectionRequests=1);
     int receiveNumOfPackets();
     void sendResponseOK();
     void handleTraffic();

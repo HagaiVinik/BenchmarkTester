@@ -5,8 +5,11 @@
 #include "BTReceiverTCP.hpp"
 
 
-BTReceiverTCP::BTReceiverTCP(const int &buffSize ,const std::string &ipAddr) : BTReceiver(ipAddr, buffSize)
-{}
+BTReceiverTCP::BTReceiverTCP(int buffSize, const std::string &ipAddr) :
+                            BTReceiver(ipAddr, buffSize)
+{
+
+}
 
 void BTReceiverTCP::createSocket()
 {
@@ -22,12 +25,16 @@ void BTReceiverTCP::createSocket()
         throw std::runtime_error("ERROR:: setSockOpt() failed");
     }
 
-    /*Note: supports binding to loopBackConnetion and anyConnection only*/
+    /** Note: supports binding to loopBackConnetion and anyConnection only*/
     _address.sin_family = AF_INET;
     if(_ipAddr == ADDR_ANY)
+    {
         _address.sin_addr.s_addr = INADDR_ANY;
+    }
     else if(_ipAddr == ADDR_LOOPBACK)
+    {
         _address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    }
     _address.sin_port = htons(PORT);
 }
 
@@ -40,7 +47,7 @@ void BTReceiverTCP::bindSocket()
     }
 }
 
-void BTReceiverTCP::listenForConnection(const int maxConnectionRequests)
+void BTReceiverTCP::listenForConnection(int maxConnectionRequests)
 {
     static constexpr int successVal = 0;
     if (listen(_serverFd, maxConnectionRequests) < successVal)
@@ -148,7 +155,9 @@ void BTReceiverTCP::startServer(const int &maxConnectionRequests)
         createSocket();
         bindSocket();
         listenForConnection(maxConnectionRequests);
-    } catch (const std::runtime_error &ex){
+    }
+    catch (const std::runtime_error &ex)
+    {
         std::cout << ex.what() << std::endl;
         return;
     }

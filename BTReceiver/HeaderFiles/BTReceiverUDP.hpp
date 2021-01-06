@@ -9,10 +9,10 @@
 #include "BTReceiver.hpp"
 
 
-class BTReceiverUDP : public BTReceiver {
+class BTReceiverUDP : public BTReceiver
+{
 public:
-    BTReceiverUDP(const int &buff_size,const std::string &ipAddr);
-    ~BTReceiverUDP() = default;
+    BTReceiverUDP(int buff_size,const std::string &ipAddr);
     void startServer(const int maxConnectionRequests=1);
 
 private:
@@ -25,7 +25,7 @@ private:
     int receiveNumOfPackets();
     void sendResponseOK();
     void handleTraffic();
-    void sendThroughput(const double &successInPercents, const int &numOfPacketsLost);
+    void sendThroughput(double successInPercents, int numOfPacketsLost);
 };
 
 

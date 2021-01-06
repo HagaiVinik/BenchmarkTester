@@ -128,7 +128,7 @@ void AppWorkerThread::craftPacket()
     _packetPtr = &newPacket;
 }
 
-long double AppWorkerThread::computeThroughput(long timeInMiliSeconds)
+void AppWorkerThread::computeThroughput(long timeInMiliSeconds)
 {
     long double throughput;
     double accurate_time = static_cast<double>(timeInMiliSeconds) / 1000.00;
