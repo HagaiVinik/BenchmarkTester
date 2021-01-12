@@ -26,23 +26,8 @@ add_executable(BenchmarkTester main.cpp
 
 
 
-### PCPP Variables ###
-# Includes: #
-#set(PCAPPP_INCLUDES /home/hagai/Downloads/PcapPlusPlus-20.08/Dist/header)
-set(PCAPPP_INCLUDES_2 /usr/include/netinet)
-# libs: #
-set(PCAPPP_LIBS_DIR /home/hagai/Downloads/PcapPlusPlus-20.08/Dist)
-set(PCAPPP_LIBS Pcap++ Packet++ Common++)
-set(PCAPPP_LIBS pcap pthread)
-#######################
 
-### DPDK Variables ###
-# Includes: #
-#set(DPDK_INCLUDES /home/hagai/Downloads/dpdk-stable-18.11.10/build/include)
-# Libs: #
-set(DPDK_LIB /home/hagai/Downloads/dpdk-stable-18.11.10/build/lib)
-
-
+include_directories(/usr/include/netinet)
 include_directories(/home/hagai/Downloads/PcapPlusPlus-20.08/Dist/header)
 include_directories(/usr/local/include/pcapplusplus)
 include_directories(/usr/local/include/dpdk)
@@ -52,10 +37,13 @@ link_directories(/home/hagai/Downloads/dpdk-stable-18.11.10/build/lib)
 link_directories(/home/hagai/Downloads/PcapPlusPlus-20.08/Dist)
 
 
+set(DPDK_LIB /home/hagai/Downloads/dpdk-stable-18.11.10/build/lib)
 set(DPDK_LIBS "-Wl,--whole-archive -ldpdk -Wl,--no-whole-archive")
 set(OTHER_LIBS "-Wl,--whole-archive -lrte_pmd_bond -lrte_pmd_virtio -lrte_pmd_enic -lrte_pmd_i40e -lrte_pmd_fm10k -lrte_pmd_ixgbe -lrte_net -lrte_pmd_e1000 -lrte_pmd_ring -lrte_pmd_af_packet -lrte_kni -lrte_ethdev -lrte_eal -lrte_mbuf -lrte_mempool -lrte_ring -lrte_kvargs -lrte_hash -lrte_cmdline -lrt -lm -ldl -lpthread -Wl,--no-whole-archive")
 set(OTHER_LIBS_2 "-Wl,--whole-archive -lrte_pci -lrte_bus_pci -lrte_bus_vdev -lrte_mempool_ring -lnuma -Wl,--no-whole-archive")
+set(PCAPPP_LIBS_DIR /home/hagai/Downloads/PcapPlusPlus-20.08/Dist)
 
+set(CMAKE_C_FLAGS "-Wall -Wextra -g -03 -std=gnu11")
 
 target_link_libraries(${PROJECT_NAME} ${DPDK_LIB})
 target_link_libraries(${PROJECT_NAME} ${DPDK_LIBS})

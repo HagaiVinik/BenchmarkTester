@@ -1,10 +1,16 @@
 include /home/hagai/Downloads/PcapPlusPlus-20.08/mk/platform.mk
 include /home/hagai/Downloads/PcapPlusPlus-20.08/mk/PcapPlusPlus.mk
 
-SOURCES := $(wildcard *.cpp)
-HEADERS := $(wildcard *.hpp)
 
+SOURCES := $(wildcard *.cpp)
+BTReceiverUDP_OBJS_FILENAMES := $(patsubst BTReceiver/BTReceiverUDP.cpp,BTReceiverUDP.o,BTReceiverUDP.cpp)
+SOURCES += $(BTReceiverUDP_OBJS_FILENAMES)
 OBJS_FILENAMES := $(patsubst %.cpp,Obj/%.o,$(SOURCES))
+
+
+
+SOURCES += BTReceiverUDP_OBJS_FILENAMES
+#OBJS_FILENAMES += BTReceiverUDP_OBJS_FILENAMES
 
 Obj/%.o: %.cpp
 	@echo 'Building file: $<'
@@ -19,6 +25,9 @@ CUR_TARGET := $(notdir $(shell pwd))
 all: dependents BenchmarkTester
 
 start:
+	@echo '==> OBJS_FILENAMES: $(OBJS_FILENAMES)'
+	@echo '==> BTReceiverUDP_OBJS_FILENAMES: $(BTReceiverUDP_OBJS_FILENAMES)'
+	@echo '==> SOURCES: $(SOURCES) $(BTReceiverUDP_SRC)'
 	@echo '==> Building target: $(CUR_TARGET)'
 
 create-directories:

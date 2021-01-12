@@ -25,7 +25,6 @@
 #include "DnsLayer.h"
 #include "PcapFileDevice.h"
 
-#include "Common.hpp"
 
 class AppWorkerThread : public pcpp::DpdkWorkerThread{
 private:

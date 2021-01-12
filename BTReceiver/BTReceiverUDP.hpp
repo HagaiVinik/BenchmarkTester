@@ -6,7 +6,7 @@
 #define BENCHMARKTESTER_BTRECEIVERUDP_HPP
 
 
-#include "BTReceiver.hpp"
+#include "../BTReceiver.hpp"
 
 
 class BTReceiverUDP : public BTReceiver
