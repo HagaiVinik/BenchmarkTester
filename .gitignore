@@ -2,7 +2,7 @@
 cmake-build-debug
 .idea
 build
-BTpcppDPDK/HeaderFiles/Common.hpp
+Common.hpp
 
 # Will delete later.
 temp

@@ -156,12 +156,12 @@ int main(int argc, char* argv[])
     {
         if(BTInstance == "server")
         {
-            BTpcppDPDK bt(buffSize,BTIpAddr, BTpcppDPDK::RECEIVER);
+            BTpcppDPDK bt(buffSize, numOfPackets, BTIpAddr, BTpcppDPDK::RECEIVER);
             bt.startServer();
         }
         else if(BTInstance == "client")
         {
-            BTpcppDPDK bt(buffSize,BTIpAddr, BTpcppDPDK::TRANSMITTER);
+            BTpcppDPDK bt(buffSize, numOfPackets, BTIpAddr, BTpcppDPDK::TRANSMITTER);
             bt.startServer();
         }
     }
