@@ -3,13 +3,13 @@ include /home/hagai/Downloads/PcapPlusPlus-20.08/mk/PcapPlusPlus.mk
 
 
 SOURCES := $(wildcard *.cpp)
-BTReceiverUDP_OBJS_FILENAMES := $(patsubst BTReceiver/BTReceiverUDP.cpp,BTReceiverUDP.o,BTReceiverUDP.cpp)
-SOURCES += $(BTReceiverUDP_OBJS_FILENAMES)
+#BTReceiverUDP_OBJS_FILENAMES := $(patsubst BTReceiver/BTReceiverUDP.cpp,BTReceiverUDP.o,BTReceiverUDP.cpp)
+#SOURCES += $(BTReceiverUDP_OBJS_FILENAMES)
 OBJS_FILENAMES := $(patsubst %.cpp,Obj/%.o,$(SOURCES))
 
 
 
-SOURCES += BTReceiverUDP_OBJS_FILENAMES
+#SOURCES += BTReceiverUDP_OBJS_FILENAMES
 #OBJS_FILENAMES += BTReceiverUDP_OBJS_FILENAMES
 
 Obj/%.o: %.cpp
