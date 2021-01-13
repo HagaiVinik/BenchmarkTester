@@ -27,17 +27,15 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
 
 bool AppWorkerThread::run(uint32_t coreId)
 {
-    bool retVal;
     _coreId = coreId;   // Register coreId for this worker
     int packetsCounter = 0;
     auto packetArr = new pcpp::MBufRawPacket[_buffSize];
 
     if (_role == RECEIVER)
     {
-        std::cout << "Recieving Packets....." << std::endl;
+        std::cout << "waiting for Packets to arrive....." << std::endl;
 
         auto startTime = std::chrono::high_resolution_clock::now();
-        std::cout << "_numOfPackets: " << _numOfPackets << std::endl;
         while (packetsCounter < _numOfPackets)
         {
             uint16_t packetsReceived = _device->receivePackets(&packetArr, _buffSize, 0);
@@ -67,8 +65,6 @@ bool AppWorkerThread::run(uint32_t coreId)
         }
 
         std::cout << "Throughput is: " << _throughputVal << _throughputType << " per second." << std::endl;
-        /* Send Throughput: */
-        //sendThroughput();
     }
     else if(_role == TRANSMITTER)
     {
@@ -77,8 +73,6 @@ bool AppWorkerThread::run(uint32_t coreId)
         {
             _device->sendPacket(*_packetPtr->getRawPacket());
         }
-        /* receiveThroughput: */
-        //receiveThroughput();
     }
 
     _isFinished = true;
@@ -86,6 +80,7 @@ bool AppWorkerThread::run(uint32_t coreId)
     {
         return true;
     }
+    return false;
 }
 
 void AppWorkerThread::stop()
@@ -154,15 +149,4 @@ void AppWorkerThread::computeThroughput(long timeInMiliSeconds)
         _throughputType = "KB";
     }
     _throughputVal = result;
-}
-
-
-/* Unnecessary currently */
-
-void AppWorkerThread::sendThroughput()
-{
-}
-
-void AppWorkerThread::receiveThroughput()
-{
 }

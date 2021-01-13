@@ -72,9 +72,6 @@ public:
 
     void craftPacket();
     void computeThroughput(long timeInMiliSeconds);
-    void sendThroughput();
-    void receiveThroughput();
-
 
 };
 
