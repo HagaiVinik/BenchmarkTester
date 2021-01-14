@@ -73,12 +73,13 @@ void BTpcppDPDK::setWorker()
 {
     std::cout << "setting Workers....." << std::endl;
 
-    appWorkerThread = new AppWorkerThread(_device,
-                                                _role,
-                                                _ipAddr,
-                                                _buffSize,
-                                                _numOfPackets);
-    _workers.push_back(appWorkerThread);
+    appWorkerThread = std::make_unique<AppWorkerThread>(_device,
+                                                        _role,
+                                                        _ipAddr,
+                                                        _buffSize,
+                                                        _numOfPackets);
+
+    _workers.push_back(appWorkerThread.get());
 
     std::cout << "Done." << std::endl;
 }
@@ -95,7 +96,7 @@ void BTpcppDPDK::startWorkerThreads()
         throw std::runtime_error("ERROR handleTraffic(): error in startDpdkWorkerThreads(), couldn't start DPDK workerThreads.");
     }
 }
-
+/* Don't need it at this time. */
 void BTpcppDPDK::registerToEvent()
 {
     pcpp::ApplicationEventHandler::getInstance().onApplicationInterrupted( onApplicationInterrupted, nullptr);

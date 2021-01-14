@@ -25,11 +25,6 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
     craftPacket();
 }
 
-void fillArr(pcpp::MBufRawPacket (&packetArr)[1024], pcpp::MBufRawPacket &mBufRawPacket)
-{
-
-}
-
 bool AppWorkerThread::run(uint32_t coreId)
 {
     _coreId = coreId;   // Register coreId for this worker
@@ -62,7 +57,6 @@ bool AppWorkerThread::run(uint32_t coreId)
 
         long timeInMilliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
         computeThroughput(timeInMilliSeconds);
-
 
         // free packet array (frees all mbufs as well)
         std::cout << "Throughput is: " << _throughputVal << _throughputType << " per second." << std::endl;

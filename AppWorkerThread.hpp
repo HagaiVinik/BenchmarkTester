@@ -27,17 +27,15 @@
 
 
 class AppWorkerThread : public pcpp::DpdkWorkerThread{
-private:
-    pcpp::DpdkDevice* _device;
-    uint32_t _coreId;
-
-
-    const int _buffSize;
-    const int _numOfPackets;
-    pcpp::Packet* _packetPtr;
-    std::string _ipAddr;
-
 public:
+    static constexpr auto RECEIVER = 1;
+    static constexpr auto TRANSMITTER = 2;
+    static constexpr auto DEFAULT_CAPACITY = 1024;
+    static constexpr auto PORT = 7600;
+    static constexpr auto KB_SIZE = 1024.0;
+    static constexpr auto MB_SIZE = KB_SIZE * 1024.0;
+    static constexpr auto GB_SIZE = MB_SIZE * 1024.0;
+
     AppWorkerThread(pcpp::DpdkDevice* device,
                     uint16_t _role,
                     const std::string &ipAddr,
@@ -62,16 +60,17 @@ public:
     // get worker thread core ID
     uint32_t getCoreId() const override ;
 
-    static constexpr auto RECEIVER = 1;
-    static constexpr auto TRANSMITTER = 2;
-    static constexpr auto DEFAULT_CAPACITY = 1024;
-    static constexpr auto PORT = 7600;
-    static constexpr auto KB_SIZE = 1024.0;
-    static constexpr auto MB_SIZE = KB_SIZE * 1024.0;
-    static constexpr auto GB_SIZE = MB_SIZE * 1024.0;
-
     void craftPacket();
     void computeThroughput(long timeInMiliSeconds);
+
+private:
+    pcpp::DpdkDevice* _device;
+    uint32_t _coreId;
+
+    const int _buffSize;
+    const int _numOfPackets;
+    pcpp::Packet* _packetPtr;
+    std::string _ipAddr;
 
 };
 
