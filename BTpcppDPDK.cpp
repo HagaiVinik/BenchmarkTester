@@ -92,7 +92,7 @@ void BTpcppDPDK::startWorkerThreads()
     retVal = pcpp::DpdkDeviceList::getInstance().startDpdkWorkerThreads(2, _workers);
     if(!retVal)
     {
-        std::cout << "ERROR handleTraffic(): error in startDpdkWorkerThreads(), couldn't start DPDK workerThreads." << std::endl;
+        throw std::runtime_error("ERROR handleTraffic(): error in startDpdkWorkerThreads(), couldn't start DPDK workerThreads.");
     }
 }
 
@@ -133,6 +133,7 @@ void BTpcppDPDK::startServer()
     catch (const std::runtime_error &ex)
     {
         std::cout <<  ex.what() << std::endl;
+        return;
     }
 
     while(!appWorkerThread->_isFinished);

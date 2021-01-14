@@ -1,8 +1,8 @@
 # unnecessary folders
 cmake-build-debug
+CMakeLists.txt
 .idea
-build
-Common.hpp
+Obj
 
 # Will delete later.
 temp

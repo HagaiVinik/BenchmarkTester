@@ -25,11 +25,20 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
     craftPacket();
 }
 
+void fillArr(pcpp::MBufRawPacket (&packetArr)[1024], pcpp::MBufRawPacket &mBufRawPacket)
+{
+
+}
+
 bool AppWorkerThread::run(uint32_t coreId)
 {
     _coreId = coreId;   // Register coreId for this worker
     int packetsCounter = 0;
-    auto packetArr = new pcpp::MBufRawPacket[_buffSize];
+    //pcpp::MBufRawPacket* packetArr[_buffSize];
+    auto packetArr = std::make_unique<pcpp::MBufRawPacket*[]>(_buffSize);
+    //std::unique_ptr<pcpp::MBufRawPacket> str(new pcpp::MBufRawPacket[_buffSize]);
+    pcpp::MBufRawPacket mBufRawPacket;
+    mBufRawPacket.initFromRawPacket(_packetPtr->getRawPacket(), _device);
 
     if (_role == RECEIVER)
     {
@@ -38,7 +47,7 @@ bool AppWorkerThread::run(uint32_t coreId)
         auto startTime = std::chrono::high_resolution_clock::now();
         while (packetsCounter < _numOfPackets)
         {
-            uint16_t packetsReceived = _device->receivePackets(&packetArr, _buffSize, 0);
+            uint16_t packetsReceived = _device->receivePackets(packetArr.get(), _buffSize, 0);
             if (packetsCounter == 0 && packetsReceived > 0)
             {
                 startTime = std::chrono::high_resolution_clock::now();
@@ -56,22 +65,18 @@ bool AppWorkerThread::run(uint32_t coreId)
 
 
         // free packet array (frees all mbufs as well)
-        for (int i = 0; i < _buffSize; i++)
-        {
-            if (&packetArr[i] != nullptr)
-            {
-                delete &packetArr[i];
-            }
-        }
-
         std::cout << "Throughput is: " << _throughputVal << _throughputType << " per second." << std::endl;
     }
     else if(_role == TRANSMITTER)
     {
+        std::cout << "Reaching here" << std::endl;
+        packetArr[0] = &mBufRawPacket;
         /** send packets:  */
         while (packetsCounter < _numOfPackets)
         {
-            _device->sendPacket(*_packetPtr->getRawPacket());
+            std::cout <<"Sending packet: " << packetsCounter << std::endl;
+            _device->sendPacket(mBufRawPacket);
+            ++packetsCounter;
         }
     }
 
