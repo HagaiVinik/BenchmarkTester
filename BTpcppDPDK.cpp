@@ -137,6 +137,9 @@ void BTpcppDPDK::startServer()
         return;
     }
 
-    while(!appWorkerThread->_isFinished);
+    while(!appWorkerThread->_isFinished)
+    {
+        sleep(1);
+    }
     appWorkerThread->stop();
 }

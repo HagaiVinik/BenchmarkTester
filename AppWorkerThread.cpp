@@ -74,6 +74,7 @@ bool AppWorkerThread::run(uint32_t coreId)
         }
     }
 
+    std::cout << "Finished." << std::endl;
     _isFinished = true;
     while (!_stop)
     {
