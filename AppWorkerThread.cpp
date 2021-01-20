@@ -15,7 +15,9 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
         _ipAddr(ipAddr),
         _buffSize(buffSize),
         _numOfPackets(numOfPackets),
+        newPacket(buffSize),
         _isFinished(false),
+        writer("modified_packet.pcap"),
         _coreId(MAX_NUM_OF_CORES + 1),  // This initialization is like -1 , impossible value.
         _throughputVal(-1),                 // Default value for throughput.
         _throughputType(""),
@@ -27,18 +29,18 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
 
 bool AppWorkerThread::run(uint32_t coreId)
 {
-    _coreId = coreId;   // Register coreId for this worker
+    _coreId = coreId;                               // Register coreId for this worker.
     int packetsCounter = 0;
-    //pcpp::MBufRawPacket* packetArr[_buffSize];
     auto packetArr = std::make_unique<pcpp::MBufRawPacket*[]>(_buffSize);
-    //std::unique_ptr<pcpp::MBufRawPacket> str(new pcpp::MBufRawPacket[_buffSize]);
+    int shouldExitLoopCounter = 0;                  // Check if Receive procedure should end.
+
+    /**    Creating mBufRawPacket for sending _numOfPackets times    **/
     pcpp::MBufRawPacket mBufRawPacket;
-    mBufRawPacket.initFromRawPacket(_packetPtr->getRawPacket(), _device);
+    mBufRawPacket.initFromRawPacket(newPacket.getRawPacket(), _device);
 
     if (_role == RECEIVER)
     {
         std::cout << "waiting for Packets to arrive....." << std::endl;
-
         auto startTime = std::chrono::high_resolution_clock::now();
         while (packetsCounter < _numOfPackets)
         {
@@ -51,30 +53,34 @@ bool AppWorkerThread::run(uint32_t coreId)
             {
                 packetsCounter += packetsReceived;
             }
+            /**    Increment shouldExitLoopCounter if more then half of rhe packets arrived, and device stopped receiving    */
+            if(packetsReceived == 0 && packetsCounter > (_numOfPackets / 2))
+            {
+                ++shouldExitLoopCounter;
+            }
+            /**    Exit loop after (_numOfPackets / 2) iterations    */
+            if (shouldExitLoopCounter > (_numOfPackets / 2))
+            {
+                 break;
+            }
         }
         auto endTime = std::chrono::high_resolution_clock::now();
         std::cout << packetsCounter << " All packets Received!." << std::endl;
 
         long timeInMilliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
         computeThroughput(timeInMilliSeconds);
-
-        // free packet array (frees all mbufs as well)
+            
         std::cout << "Throughput is: " << _throughputVal << _throughputType << " per second." << std::endl;
     }
     else if(_role == TRANSMITTER)
     {
-        std::cout << "Reaching here" << std::endl;
-        packetArr[0] = &mBufRawPacket;
         /** send packets:  */
         while (packetsCounter < _numOfPackets)
         {
-            std::cout <<"Sending packet: " << packetsCounter << std::endl;
             _device->sendPacket(mBufRawPacket);
             ++packetsCounter;
         }
     }
-
-    std::cout << "Finished." << std::endl;
     _isFinished = true;
     while (!_stop)
     {
@@ -101,13 +107,10 @@ void AppWorkerThread::craftPacket()
     pcpp::IPv4Address sourceIPAddress("10.0.0.2");      //need to make it generic.
     pcpp::IPv4Address destIPAddress(_ipAddr);
 
-    /** create a packet with capacity of 100 bytes (will grow automatically if needed) */
-    pcpp::Packet newPacket(_buffSize);
-
     /** create layers and set arguments. */
     pcpp::EthLayer ethLayer(pcpp::MacAddress("ff:ff:ff:ff:ff:ff"), pcpp::MacAddress("ff:ff:ff:ff:ff:ff"));
     pcpp::IPv4Layer iPv4Layer(sourceIPAddress, destIPAddress);
-    pcpp::TcpLayer newTcpLayer(PORT, PORT);
+    pcpp::TcpLayer tcpLayer(PORT, PORT);
     pcpp::PayloadLayer payloadLayer(&payloadData, _buffSize, true);
 
     /** set IP layer specifically */
@@ -117,13 +120,16 @@ void AppWorkerThread::craftPacket()
     /** add all the layers we created */
     newPacket.addLayer(&ethLayer);
     newPacket.addLayer(&iPv4Layer);
-    newPacket.addLayer(&newTcpLayer);
+    newPacket.addLayer(&tcpLayer);
+    newPacket.addLayer(&payloadLayer);
 
     /** compute all calculated fields */
     newPacket.computeCalculateFields();
 
-    /** set packet pointer member class */
-    _packetPtr = &newPacket;
+    /*  */
+    pcpp::MBufRawPacket mbufrawPacket;
+    mbufrawPacket.initFromRawPacket(newPacket.getRawPacket(), _device);
+
 }
 
 void AppWorkerThread::computeThroughput(long timeInMiliSeconds)

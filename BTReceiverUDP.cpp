@@ -20,16 +20,19 @@ void BTReceiverUDP::createSocket()
     memset(&_clientAddr, 0, sizeof(_clientAddr));
     _serverAddr.sin_family = AF_INET;
     if(_ipAddr == ADDR_ANY)
+    {
         _serverAddr.sin_addr.s_addr = INADDR_ANY;
+    }
     else if(_ipAddr == ADDR_LOOPBACK)
+    {
         _serverAddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    }
     _serverAddr.sin_port = htons(PORT);
 }
 
 void BTReceiverUDP::setTimeOut()
 {
     // setting timeout for recvfrom()
-    // consider changing to SO_RCVBUFF
     timeval tv;
 
     tv.tv_sec = 1;
@@ -48,7 +51,7 @@ void BTReceiverUDP::bindSocket()
     {
         throw std::runtime_error("ERROR: error in bindSocket(), bind() failed");
     }
-    std::cout << "Socket is Binding on: '" << _ipAddr << "', PORT:" << PORT << std::endl;
+    std::cout << "Socket is Binding on: '" << _ipAddr << "', PORT:" << PORT << " (UDP)" <<std::endl;
 }
 
 int BTReceiverUDP::receiveNumOfPackets()
@@ -59,7 +62,6 @@ int BTReceiverUDP::receiveNumOfPackets()
     _valRead = recvfrom(_serverFd, (char *)_buffer.c_str(), _buffSize,
                               MSG_WAITALL, ( struct sockaddr *) &_clientAddr,
                               &len);
-
     _buffer.at(_valRead) = 0;
     if(_valRead != errorVal)
     {

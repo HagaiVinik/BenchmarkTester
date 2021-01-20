@@ -51,6 +51,7 @@ public:
     uint16_t _role;
     long double _throughputVal;
     std::string _throughputType;
+    pcpp::PcapFileWriterDevice writer;
 
     bool run(uint32_t coreId) override ;
 
@@ -66,10 +67,9 @@ public:
 private:
     pcpp::DpdkDevice* _device;
     uint32_t _coreId;
-
     const int _buffSize;
     const int _numOfPackets;
-    pcpp::Packet* _packetPtr;
+    pcpp::Packet newPacket;
     std::string _ipAddr;
 
 };

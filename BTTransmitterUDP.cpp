@@ -22,15 +22,11 @@ void BTTransmitterUDP::createSocket()
 
     _serverAddr.sin_family = AF_INET;
     _serverAddr.sin_port = htons(PORT);
-    if(_ipAddr == "0.0.0.0")
+
+    if(inet_pton(AF_INET, _ipAddr.c_str(), &_serverAddr.sin_addr) <= failedVal)
     {
-        _serverAddr.sin_addr.s_addr = INADDR_ANY;
+        throw std::runtime_error("ERROR: error in createSocket(), inet_pton() failed, Invalid _address");
     }
-    else if(_ipAddr == "127.0.0.1")
-    {
-        _serverAddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    }
-    _serverAddr.sin_addr.s_addr = INADDR_ANY;
 }
 
 void BTTransmitterUDP::sendNumOfPackets()

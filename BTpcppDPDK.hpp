@@ -59,9 +59,3 @@ private:
 
 #endif //BENCHMARKTESTER_BTPCPPDPDK_HPP
 
-
-// static void onPacketArrives();
-// void sendThroughput();
-// long double calculateThroughputVal(long timeInMiliSeconds);
-
-
