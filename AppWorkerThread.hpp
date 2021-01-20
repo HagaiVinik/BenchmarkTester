@@ -62,7 +62,7 @@ public:
     uint32_t getCoreId() const override ;
 
     void craftPacket();
-    void computeThroughput(long timeInMiliSeconds);
+    void computeThroughput(long timeInMilliSeconds);
 
 private:
     pcpp::DpdkDevice* _device;

@@ -30,9 +30,10 @@ AppWorkerThread::AppWorkerThread(pcpp::DpdkDevice* device,
 bool AppWorkerThread::run(uint32_t coreId)
 {
     _coreId = coreId;                               // Register coreId for this worker.
-    int packetsCounter = 0;
-    auto packetArr = std::make_unique<pcpp::MBufRawPacket*[]>(_buffSize);
-    int shouldExitLoopCounter = 0;                  // Check if Receive procedure should end.
+    uint64_t  packetsCounter = 0;
+    std::cout << "_numOfPackets: " << _numOfPackets << std::endl;
+    auto packetArr = std::make_unique<pcpp::MBufRawPacket*[]>(_numOfPackets);
+    uint64_t shouldExitLoopCounter = 0;                  // Check if Receive procedure should end.
 
     /**    Creating mBufRawPacket for sending _numOfPackets times    **/
     pcpp::MBufRawPacket mBufRawPacket;
@@ -44,9 +45,10 @@ bool AppWorkerThread::run(uint32_t coreId)
         auto startTime = std::chrono::high_resolution_clock::now();
         while (packetsCounter < _numOfPackets)
         {
-            uint16_t packetsReceived = _device->receivePackets(packetArr.get(), _buffSize, 0);
+            uint16_t packetsReceived = _device->receivePackets(packetArr.get(), _numOfPackets , 0);
             if (packetsCounter == 0 && packetsReceived > 0)
             {
+                std::cout << "starting..." << std::endl;
                 startTime = std::chrono::high_resolution_clock::now();
             }
             if (packetsReceived > 0)
@@ -65,6 +67,7 @@ bool AppWorkerThread::run(uint32_t coreId)
             }
         }
         auto endTime = std::chrono::high_resolution_clock::now();
+        std::cout << "Finished" << std::endl;
         std::cout << packetsCounter << " All packets Received!." << std::endl;
 
         long timeInMilliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(endTime-startTime).count();
@@ -127,15 +130,15 @@ void AppWorkerThread::craftPacket()
     newPacket.computeCalculateFields();
 
     /*  */
-    pcpp::MBufRawPacket mbufrawPacket;
-    mbufrawPacket.initFromRawPacket(newPacket.getRawPacket(), _device);
+    pcpp::MBufRawPacket MBufRawPacket;
+    MBufRawPacket.initFromRawPacket(newPacket.getRawPacket(), _device);
 
 }
 
-void AppWorkerThread::computeThroughput(long timeInMiliSeconds)
+void AppWorkerThread::computeThroughput(long timeInMilliSeconds)
 {
     long double throughput;
-    double accurate_time = static_cast<double>(timeInMiliSeconds) / 1000.00;
+    double accurate_time = static_cast<double>(timeInMilliSeconds) / 1000.00;
     throughput = static_cast<double>((_numOfPackets * _buffSize)) / accurate_time;
 
     double result = 0.0;
