@@ -1,8 +1,6 @@
 # unnecessary folders
 cmake-build-debug
+CMakeLists.txt
 .idea
-build
-BTpcppDPDK/HeaderFiles/Common.hpp
-
-# Will delete later.
-temp
+Obj
+modified_packet.pcap

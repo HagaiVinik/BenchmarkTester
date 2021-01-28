@@ -1,6 +1,4 @@
 #include <getopt.h>
-#include <cstdio>
-
 #include <SystemUtils.h>
 
 #include "BTpcppDPDK.hpp"
@@ -13,8 +11,7 @@
 #include "BTTransmitterUDP.hpp"
 
 
-const std::string SOFTWARE_VERSION = "2.0";
-
+static const std::string SOFTWARE_VERSION = "2.0";
 
 static struct option BTOptions[] =
         {
@@ -22,6 +19,9 @@ static struct option BTOptions[] =
                 {"server", no_argument, 0, 's'},
                 {"UDP", no_argument, 0, 'u'},
                 {"help", no_argument, 0, 'h'},
+                {"dpdk", no_argument, 0, 'd'},
+                {"loopback", no_argument, 0, 'l'},
+                {"IP", no_argument, 0, 'i'},
                 {"version", no_argument, 0, 'v'},
                 {"_numOfPackets", required_argument, 0, 'p'},
                 {"_buffSize", required_argument, 0, 'b'},
@@ -38,8 +38,9 @@ void printUsage()
     std::cout <<"\nUsage:\n"
            "-------\n"
            "copyright ©2020 BenchmarkTester, all rights reserved.\n"
-           "BenchmarkTester [-h] [-v] [-s server-side] [-c client-side] [-i ip Address] \n"
-           "                 [-u UDP] [-d dpdk ] \n"
+           "Written by Hagai Vinik.\n"
+           "BenchmarkTester [-h help] [-v version] [-s server-side] [-c client-side] \n"
+           "                [-i ip Address] [-u UDP] [-d dpdk ] [-l loopback] [-p] [-b]\n"
            "\nOptions:\n\n"
            "    -c client        : starts program as a client side\n"
            "    -s server        : starts program as a server side\n"
@@ -60,9 +61,9 @@ int main(int argc, char* argv[])
     std::string BTIpAddr = "0.0.0.0";
     int buffSize = 1024;
     int numOfPackets = 1024;
-    std::string BTInstance = "";
+    std::string BTInstance;
     std::string BTType = "TCP";
-    std::string filter = "";
+    std::string filter;
     bool useDpdk = false;
 
 
@@ -81,7 +82,7 @@ int main(int argc, char* argv[])
                 buffSize = std::stoi(optarg);
                 break;
             case 'c':
-                if(BTInstance == "")
+                if(BTInstance.empty())
                     BTInstance = "client";
                 else
                 {
@@ -90,7 +91,7 @@ int main(int argc, char* argv[])
                 }
                 break;
             case 's':
-                if(BTInstance == "")
+                if(BTInstance.empty())
                     BTInstance = "server";
                 else
                 {
@@ -156,12 +157,12 @@ int main(int argc, char* argv[])
     {
         if(BTInstance == "server")
         {
-            BTpcppDPDK bt(buffSize,BTIpAddr, BTpcppDPDK::RECEIVER);
+            BTpcppDPDK bt(buffSize, numOfPackets, BTIpAddr, BTpcppDPDK::RECEIVER);
             bt.startServer();
         }
         else if(BTInstance == "client")
         {
-            BTpcppDPDK bt(buffSize,BTIpAddr, BTpcppDPDK::TRANSMITTER);
+            BTpcppDPDK bt(buffSize, numOfPackets, BTIpAddr, BTpcppDPDK::TRANSMITTER);
             bt.startServer();
         }
     }
