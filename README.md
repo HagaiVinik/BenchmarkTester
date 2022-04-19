@@ -3,8 +3,7 @@
 ## Features:
 * TCP test
 * UDP test
-* DPDK TCP test //not ready yet
-* DPDK UDP test //not ready yet
+* DPDK test 
 
 All tests let client decide size of buffer and number of packets to send.
 
